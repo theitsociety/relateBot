@@ -1,4 +1,4 @@
-const config = require('./config.json');
+const config = require(`./config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
 const Utils = require('./lib/utils');
 const { Client, GatewayIntentBits } = require('discord.js');
 const client = new Client({
