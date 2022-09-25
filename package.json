@@ -4,7 +4,9 @@
   "description": "Correlates Discord member data with other resources",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod":  "NODE_ENV=prod node index.js"
   },
   "keywords": [],
   "author": "Tyson Turkoz",
