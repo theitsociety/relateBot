@@ -1,0 +1,95 @@
+
+
+const { google } = require('googleapis');
+const MailComposer = require('nodemailer/lib/mail-composer');
+const BaseHelper = require('../../lib/baseHelper');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+
+class GoogleClient extends BaseHelper {
+
+  constructor(partnerConfig, serviceConfig) {
+    super(serviceConfig);
+    this.partnerConfig = partnerConfig;
+    const { client_secret, client_id, redirect_uris } = partnerConfig.credentials;
+    this.oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+    // Load templates
+    this.templates = {};
+    _.forEach(this.partnerConfig.email.templates, (value, key) => {
+      this.templates[key] = _.template(fs.readFileSync(path.join(__dirname, '../../data/templates/', value)))
+    });
+  }
+
+  async _getTokensWithCode() {
+    const { code } = credentials.credentials;
+    return await this.oAuth2Client.getToken(code);  
+  }
+
+  async _getTokenWithRefresh () {
+    const { tokens: { refresh_token } } = this.partnerConfig.credentials;
+    this.oAuth2Client.setCredentials({
+      refresh_token: refresh_token
+    });
+    return this.oAuth2Client.refreshAccessToken().then(response => {
+      this.partnerConfig.credentials.tokens = response.credentials;
+    }).catch(e => {
+      throw Error("Unable to get token:", e);
+    });
+}
+
+  async _getGmailService() {
+    await this._getTokenWithRefresh();
+    this.oAuth2Client.setCredentials(this.partnerConfig.credentials.tokens);
+    const gmail = google.gmail({ version: 'v1', auth: this.oAuth2Client });
+    return gmail;
+  }
+
+  _encode(message) {
+    return Buffer.from(message).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  };
+  
+  async _create(options) {
+    const mailComposer = new MailComposer(options);
+    const message = await mailComposer.compile().build();
+    return this._encode(message);
+  }
+  
+  async sendMail(options) {
+    const gmail = await this._getGmailService();
+    const rawMessage = await this._create(options);
+    const { data: { id } = {} } = await gmail.users.messages.send({
+      userId: 'me',
+      resource: {
+        raw: rawMessage,
+      },
+    });
+    return id;
+  };
+
+  async sendInvite(options) {
+    const content = {
+      ...this.partnerConfig.email.defaults,
+      to: options.email,
+      subject: 'Welcome to IT Society! 🙋‍♂️',
+      html: this.templates.welcomeEmail(options),
+    };
+    return this.sendMail(content);
+  };
+
+}
+
+module.exports = GoogleClient;
+
+const partnerConfig = require('../../config_prod.json').partnerConfig.google;
+
+const main = async () => {
+  
+  const googleClient = new GoogleClient(partnerConfig);
+  const messageId = await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
+  return messageId;
+};
+
+main()
+  .then((messageId) => console.log('Message sent successfully:', messageId))
+  .catch((err) => console.error(err));
