@@ -37,7 +37,11 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('correlate')
-    .setDescription('Correlates Discord members and registrations via server nickname')
+    .setDescription('Correlates Discord members and registrations via server nickname'),
+
+  new SlashCommandBuilder()
+    .setName('aboutmyself')
+    .setDescription('Shows your registration info if correlated with Discord account')
 
 ].map(command => command.toJSON());
 

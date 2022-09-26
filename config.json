@@ -2,6 +2,10 @@
   "allowedRoles": {
     "admin": "${{ADMIN_ROLE_ID}}"
   },
+  "publicCommands": [
+    "aboutmyself",
+    "updatemyself"
+  ],
   "channels": {
     "logChannel": "${{LOG_CHANNEL_ID}}",
     "welcomeChannel": "${{WELCOME_ROLE_ID}}",
@@ -9,6 +13,7 @@
   },
 	"clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
+  "emailPartner": "google",
 	"guildId": "${{GUILD_ID}}",
   "logging": {
     "console": true,
@@ -44,7 +49,9 @@
         "redirect_uris": [
           "http://localhost"
         ],
-        "tokens": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
+        "tokens": {
+          "note": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
+        }
       },
       "email": {
         "defaults": {
