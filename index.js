@@ -81,9 +81,6 @@ client.on('interactionCreate', async interaction => {
       if (result.error) {
         interaction.reply({ content: result.error, ephemeral: true });
       } else {
-        utils.emailPartnerClient.sendInvite({ email, invite: result.newInvite.url }).then( messageId => {
-          utils.logger(`Invitation e-mail sent to **${email}**: ${messageId}`);
-        });
         interaction.reply(`${email} ${result.newInvite.url}`);
       }
     }
