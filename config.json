@@ -45,6 +45,7 @@
     "👶": "practice-programming-beginner",
     "📏": "data-engineer"
   },
+  "startUpCorrelatation": false,
   "syncPeriod": 300000,
   "token": "${{TOKEN}}"
 }

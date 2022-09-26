@@ -20,9 +20,11 @@ const wait = require("timers/promises").setTimeout;
 // Sync member data when the bot is ready, bind to the role reactions
 client.on('ready', async () => {
   utils.logger(`Logged in as ${client.user.tag}!`, { consoleOnly: true});
-  await utils.correlateDiscordvsNotion();
-  // to make sure Partner has updated
-  await wait(1000);
+  if (config.startUpCorrelatation) {
+    await utils.correlateDiscordvsNotion();
+    // to make sure Partner has updated data
+    await wait(1000);  
+  }
   await utils.synMemberData();
   await utils.collectRoleSelections();
 })
