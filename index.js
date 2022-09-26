@@ -96,7 +96,7 @@ client.on('interactionCreate', async interaction => {
 
     else if (commandName === 'emails') {
       const role = interaction.options.get('role').role.name;
-      interaction.reply(utils.getEmailsByRoles(role));
+      interaction.reply(utils.generateEmbed( `Email List`, { role, emails: utils.getEmailsByRoles(role)}));
     }
 
     else if (commandName === 'info') {
