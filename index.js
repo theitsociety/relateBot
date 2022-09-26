@@ -88,7 +88,7 @@ client.on('interactionCreate', async interaction => {
     else if (commandName === 'email') {
       const userInfo = utils.members.get(interaction.options.get('user').user.id);
       if (!userInfo) {
-        interaction.reply({ content: `Email not found for **${interaction.options.get('user').nickname || interaction.options.get('user').user.username}**`, ephemeral: true });
+        interaction.reply({ content: `Email not found for **${utils.getNickname(interaction.options.get('user'))}**`, ephemeral: true });
       } else {
         interaction.reply(`Email of **${userInfo.nickname}** is found as **${userInfo['Email Address']}**`);
       }
@@ -102,7 +102,7 @@ client.on('interactionCreate', async interaction => {
     else if (commandName === 'info') {
       const userInfo = utils.members.get(interaction.options.get('user').user.id);
       if (!userInfo) {
-        interaction.reply({ content: `User not found **${interaction.options.get('user').nickname || interaction.options.get('user').user.username}**`, ephemeral: true });
+        interaction.reply({ content: `User not found **${utils.getNickname(interaction.options.get('user'))}**`, ephemeral: true });
       } else {
         // console.log(JSON.stringify(utils.generateUserInfo(userInfo), null, ' '))
         interaction.reply(utils.generateUserInfo(userInfo));
