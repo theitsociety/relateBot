@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod": "NODE_ENV=prod node index.js"
+    "prod": "NODE_ENV=prod node index.js",
+    "deploy": "NODE_ENV=prod node deploy-commands.js"
   },
   "keywords": [],
   "author": "Tyson Turkoz",

@@ -59,13 +59,14 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()){
     return;
   } 
-  // Only Admins can use the commands
-  if (!user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id))) {
+
+  let { commandName } = interaction;
+
+  // Only Admins can use private commands
+  if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
     interaction.reply({ content: `You don't have permission`, ephemeral: true });
     return;
   }
-
-  const { commandName } = interaction;
 
   try {
     if (commandName === 'invite') {
@@ -86,7 +87,7 @@ client.on('interactionCreate', async interaction => {
     }
 
     else if (commandName === 'email') {
-      const userInfo = utils.members.get(interaction.options.get('user').user.id);
+      const userInfo = utils.members.get(user.id);
       if (!userInfo) {
         interaction.reply({ content: `Email not found for **${utils.getNickname(interaction.options.get('user'))}**`, ephemeral: true });
       } else {
@@ -99,13 +100,14 @@ client.on('interactionCreate', async interaction => {
       interaction.reply(utils.generateEmbed( `Email List`, { role, emails: utils.getEmailsByRoles(role)}));
     }
 
-    else if (commandName === 'info') {
-      const userInfo = utils.members.get(interaction.options.get('user').user.id);
-      if (!userInfo) {
-        interaction.reply({ content: `User not found **${utils.getNickname(interaction.options.get('user'))}**`, ephemeral: true });
+    else if (commandName === 'info' || commandName === 'aboutmyself') {
+      const profile =  commandName == 'aboutmyself' ? { user } : interaction.options.get('user');
+      const userInfo = utils.members.get(profile.user.id);
+      if (!userInfo || !userInfo.partnerId) {
+        interaction.reply({ content: `Registration not found for **${utils.getNickname(profile)}**`, ephemeral: true });
       } else {
         // console.log(JSON.stringify(utils.generateUserInfo(userInfo), null, ' '))
-        interaction.reply(utils.generateUserInfo(userInfo));
+        interaction.reply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
         // interaction.reply(JSON.stringify(userInfo, null, ' '));
       }
     }
