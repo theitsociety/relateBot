@@ -1,0 +1,34 @@
+
+{
+  "partnerConfig": {
+    "google": {
+      "credentials": {
+        "client_id": "{{CLIENT_ID}",
+        "project_id": "{{PROJECT_ID}}",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "{{CLIENT_SECRET}}",
+        "redirect_uris": [
+          "http://localhost"
+        ],
+        "tokens": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
+      },
+      "email": {
+        "defaults": {
+          "replyTo": "info@itsociety.org",
+          "from": "IT Society<info@itsociety.org>",
+          "headers": [
+            { "key": "X-Application-Developer", "value": "Tyson Turkoz" },
+            { "key": "X-Application-Version", "value": "v1.0.0" }
+          ],
+          "text": "This email is sent by IT Society Discord Server",
+          "textEncoding": "base64"
+        },
+        "templates": {
+          "welcomeEmail": "welcomeEmail.html"
+        }
+      }
+    }
+  }
+}
