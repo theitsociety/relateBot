@@ -77,7 +77,15 @@ client.on('interactionCreate', async interaction => {
         return;
       }
       const result = await utils.createInvite(email);
-      interaction.reply(result.error ? { content: result.error, ephemeral: true } : `${email} ${result.newInvite}`);
+
+      if (result.error) {
+        interaction.reply({ content: result.error, ephemeral: true });
+      } else {
+        utils.emailPartnerClient.sendInvite({ email, invite: result.newInvite.url }).then( messageId => {
+          utils.logger(`Invitation e-mail sent to **${email}**: ${messageId}`);
+        });
+        interaction.reply(`${email} ${result.newInvite.url}`);
+      }
     }
 
     else if (commandName === 'email') {
