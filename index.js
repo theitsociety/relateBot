@@ -56,19 +56,23 @@ client.on('messageCreate', async msg => {
 // All bot commands are handled here
 client.on('interactionCreate', async interaction => {
   const user = await interaction.guild.members.fetch(interaction.user.id);
+  const nickname = utils.getNickname(user);
   if (!interaction.isChatInputCommand()){
     return;
   } 
 
   let { commandName } = interaction;
 
-  // Only Admins can use private commands
-  if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
-    interaction.reply({ content: `You don't have permission`, ephemeral: true });
-    return;
-  }
-
   try {
+
+    // Only Admins can use private commands
+    if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
+      utils.logger(`**${nickname}** does not have permission to execute command **${commandName}**`);
+      interaction.reply({ content: `You don't have permission`, ephemeral: true });
+      return;
+    }
+    utils.logger(`**${nickname}** executed command **${commandName}**`);
+
     if (commandName === 'invite') {
       const email = interaction.options.get('email').value;
       const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -89,9 +93,9 @@ client.on('interactionCreate', async interaction => {
     else if (commandName === 'email') {
       const userInfo = utils.members.get(user.id);
       if (!userInfo) {
-        interaction.reply({ content: `Email not found for **${utils.getNickname(interaction.options.get('user'))}**`, ephemeral: true });
+        interaction.reply({ content: `Email not found for **${nickname}**`, ephemeral: true });
       } else {
-        interaction.reply(`Email of **${userInfo.nickname}** is found as **${userInfo['Email Address']}**`);
+        interaction.reply(`Email of **${nickname}** is found as **${userInfo['Email Address']}**`);
       }
     }
 
