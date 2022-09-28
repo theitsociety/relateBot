@@ -1,6 +1,7 @@
 const config = require(`./config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
 const Utils = require('./lib/utils');
 const { Client, GatewayIntentBits } = require('discord.js');
+const _ = require('lodash');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -21,7 +22,7 @@ const wait = require("timers/promises").setTimeout;
 client.on('ready', async () => {
   utils.logger(`Logged in as ${client.user.tag}!`, { consoleOnly: true});
   if (config.startUpCorrelatation) {
-    await utils.correlateDiscordvsNotion();
+    await utils.correlateDiscordWithPartner();
     // to make sure Partner has updated data
     await wait(1000);  
   }
@@ -55,15 +56,18 @@ client.on('messageCreate', async msg => {
 
 // All bot commands are handled here
 client.on('interactionCreate', async interaction => {
-  const user = await interaction.guild.members.fetch(interaction.user.id);
-  const nickname = utils.getNickname(user);
+
   if (!interaction.isChatInputCommand()){
     return;
   } 
+  // deferReply & editReply prevents crashes and timeouts
+  await interaction.deferReply();
 
   let { commandName } = interaction;
 
   try {
+    const user = await interaction.guild.members.fetch(interaction.user.id);
+    const nickname = utils.getNickname(user);
 
     // Only Admins can use private commands
     if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
@@ -71,57 +75,83 @@ client.on('interactionCreate', async interaction => {
       interaction.reply({ content: `You don't have permission`, ephemeral: true });
       return;
     }
-    utils.logger(`**${nickname}** executed command **${commandName}**`);
+    // utils.logger(`**${nickname}** executed command **${commandName}**`);
 
     if (commandName === 'invite') {
       const email = interaction.options.get('email').value;
-      const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
       // Check if option is a valid email
-      if (!emailRegExp.test(email)) {
-        interaction.reply({ content: `Not a valid email ${email}`, ephemeral: true });
+      if (!utils.isEmail(email)) {
+        await interaction.editReply({ content: `Not a valid email ${email}`, ephemeral: true });
         return;
       }
       const result = await utils.createInvite(email);
 
       if (result.error) {
-        interaction.reply({ content: result.error, ephemeral: true });
+        await interaction.editReply({ content: result.error, ephemeral: true });
       } else {
-        interaction.reply(`${email} ${result.newInvite.url}`);
+        await interaction.editReply(`${email} ${result.newInvite.url}`);
       }
     }
 
     else if (commandName === 'email') {
       const userInfo = utils.members.get(user.id);
       if (!userInfo) {
-        interaction.reply({ content: `Email not found for **${nickname}**`, ephemeral: true });
+        await interaction.editReply({ content: `Email not found for **${nickname}**`, ephemeral: true });
       } else {
-        interaction.reply(`Email of **${nickname}** is found as **${userInfo['Email Address']}**`);
+        await interaction.editReply(`Email of **${nickname}** is found as **${userInfo['Email Address']}**`);
       }
     }
 
     else if (commandName === 'emails') {
       const role = interaction.options.get('role').role.name;
-      interaction.reply(utils.generateEmbed( `Email List`, { role, emails: utils.getEmailsByRoles(role)}));
+      await interaction.editReply(utils.generateEmbed( `Email List`, { role, emails: utils.getEmailsByRoles(role)}));
     }
 
     else if (commandName === 'info' || commandName === 'aboutmyself') {
-      const profile =  commandName == 'aboutmyself' ? { user } : interaction.options.get('user');
-      const userInfo = utils.members.get(profile.user.id);
+      const profile =  commandName == 'aboutmyself' ? user : interaction.options.get('user');
+      const userInfo = utils.members.get(profile.id);
       if (!userInfo || !userInfo.partnerId) {
-        interaction.reply({ content: `Registration not found for **${utils.getNickname(profile)}**`, ephemeral: true });
+        await interaction.editReply({ content: `Registration not found for **${utils.getNickname(profile)}**`, ephemeral: true });
       } else {
-        // console.log(JSON.stringify(utils.generateUserInfo(userInfo), null, ' '))
-        interaction.reply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
-        // interaction.reply(JSON.stringify(userInfo, null, ' '));
+        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
       }
     }
 
     else if (commandName === 'correlate') {
-      interaction.reply(`Correlation started, please check logs`);
-      await utils.correlateDiscordvsNotion();
+      await interaction.editReply(`Correlation started, please check logs`);
+      await utils.correlateDiscordWithPartner();
     }
+
+    else if (commandName === 'updatemyself') {
+      if (_.isEmpty(interaction.options.data)) {
+        await interaction.editReply({ content: `Requires one of the options`, ephemeral: true });
+        return;        
+      }
+      const updates = utils.mapOptions(interaction.options.data);
+      const userInfo = utils.members.get(user.id);
+      const email = _.get(interaction.options.get('email'), 'value');
+
+      if (email && !utils.isEmail(email)) {
+        await interaction.editReply({ content: `Not a valid email **${email}**`, ephemeral: true });
+        return;
+      } 
+
+      // update existing user
+      if (utils.isCorrelatedProfile(userInfo)) {
+        updates["Full Name"] = updates["Full Name"] || userInfo.nickname;
+        await utils.updateProfile(userInfo, updates);
+        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
+      } 
+      // redeem email address
+      else {
+        const result = await utils.redeemProfile(userInfo, updates);
+        await interaction.editReply({ content: result, ephemeral: true });
+        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
+      }
+    }
+
   } catch (e) {
-    utils.logger(`Unable to complete command **${commandName}**: ${e}`)
+    await interaction.editReply({ content: `Unable to complete command **${commandName}**: ${e}`, ephemeral: true });
   }
 }); 
 
