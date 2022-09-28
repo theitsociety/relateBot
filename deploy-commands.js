@@ -41,7 +41,27 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('aboutmyself')
-    .setDescription('Shows your registration info if correlated with Discord account')
+    .setDescription('Shows your registration info if correlated with Discord account'),
+
+  new SlashCommandBuilder()
+    .setName('updatemyself')
+    .setDescription('Create or Update your IT Society Profile')
+    .addStringOption(option =>
+      option.setName('email')
+        .setDescription('Email')
+        .setRequired(false))
+    .addStringOption(option =>
+      option.setName('name')
+        .setDescription('Full Name')
+        .setRequired(false))
+    .addStringOption(option =>
+      option.setName('company')
+        .setDescription('Company')
+        .setRequired(false))
+    .addStringOption(option =>
+      option.setName('title')
+        .setDescription('Job Title')
+        .setRequired(false)),
 
 ].map(command => command.toJSON());
 
