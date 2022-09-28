@@ -41,11 +41,11 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('aboutmyself')
-    .setDescription('Shows your registration info if correlated with Discord account'),
+    .setDescription('Shows your profile if correlated with Discord account'),
 
   new SlashCommandBuilder()
     .setName('updatemyself')
-    .setDescription('Create or Update your IT Society Profile')
+    .setDescription('Creates, redeems or updates your IT Society profile')
     .addStringOption(option =>
       option.setName('email')
         .setDescription('Email')
