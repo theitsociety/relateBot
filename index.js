@@ -61,7 +61,7 @@ client.on('interactionCreate', async interaction => {
     return;
   } 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply();
+  await interaction.deferReply({ephemeral: true});
 
   let { commandName } = interaction;
 
@@ -75,7 +75,7 @@ client.on('interactionCreate', async interaction => {
       interaction.reply({ content: `You don't have permission`, ephemeral: true });
       return;
     }
-    // utils.logger(`**${nickname}** executed command **${commandName}**`);
+    utils.logger(`**${nickname}** executed command **${commandName}**`);
 
     if (commandName === 'invite') {
       const email = interaction.options.get('email').value;
