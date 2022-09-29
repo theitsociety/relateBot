@@ -12,6 +12,26 @@ const commands = [
         .setRequired(true)),
 
   new SlashCommandBuilder()
+    .setName('register')
+    .setDescription('Registers a user!')
+    .addStringOption(option =>
+      option.setName('email')
+        .setDescription('User email')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('name')
+        .setDescription('Full Name')
+        .setRequired(true))
+    .addStringOption(option =>
+      option.setName('company')
+        .setDescription('Company')
+        .setRequired(false))
+    .addStringOption(option =>
+      option.setName('title')
+        .setDescription('Job Title')
+        .setRequired(false)),
+
+  new SlashCommandBuilder()
     .setName('email')
     .setDescription('Returns email of a user if registered')
     .addUserOption(option =>
