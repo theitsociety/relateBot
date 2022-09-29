@@ -60,10 +60,10 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()){
     return;
   } 
-  // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: true});
-
   let { commandName } = interaction;
+
+  // deferReply & editReply prevents crashes and timeouts
+  await interaction.deferReply({ephemeral: ["invite"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
