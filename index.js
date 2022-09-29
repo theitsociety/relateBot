@@ -63,7 +63,7 @@ client.on('interactionCreate', async interaction => {
   let { commandName } = interaction;
 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: ["invite"].includes(commandName) ? false : true });
+  await interaction.deferReply({ephemeral: ["invite", "register"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
@@ -120,6 +120,12 @@ client.on('interactionCreate', async interaction => {
     else if (commandName === 'correlate') {
       await interaction.editReply(`Correlation started, please check logs`);
       await utils.correlateDiscordWithPartner();
+    }
+
+    else if (commandName === 'register') {
+      const options = utils.mapOptions(interaction.options.data);
+      await utils.createProfile(options);
+      await interaction.editReply({ content: `Registered  **${options['Email Address']}**` });
     }
 
     else if (commandName === 'updatemyself') {
