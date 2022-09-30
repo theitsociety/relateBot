@@ -84,7 +84,7 @@ client.on('interactionCreate', async interaction => {
         await interaction.editReply({ content: `Not a valid email ${email}`, ephemeral: true });
         return;
       }
-      const result = await utils.createInvite(email);
+      const result = await utils.createInvite(email, true);
 
       if (result.error) {
         await interaction.editReply({ content: result.error, ephemeral: true });
