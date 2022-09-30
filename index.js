@@ -124,8 +124,8 @@ client.on('interactionCreate', async interaction => {
 
     else if (commandName === 'register') {
       const options = utils.mapOptions(interaction.options.data);
-      await utils.createProfile(options);
-      await interaction.editReply({ content: `Registered  **${options['Email Address']}**` });
+      const profileOutput = await utils.createProfile(options);
+      await interaction.editReply(profileOutput);
     }
 
     else if (commandName === 'updatemyself') {
