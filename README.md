@@ -23,7 +23,12 @@ v18.9.0
 
 ### Prepare Config File
 Generate `config_prod.json` file. `config.json` will help guide you. 
- 
+
+### Deploy the commands
+```
+➜  relateBot git:(main) node run deploy
+```
+
 ### Run Your Bot
 ```
 ➜  relateBot git:(main) node run prod
