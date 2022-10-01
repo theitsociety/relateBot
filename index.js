@@ -21,6 +21,9 @@ const wait = require("timers/promises").setTimeout;
 // Sync member data when the bot is ready, bind to the role reactions
 client.on('ready', async () => {
   utils.logger(`Logged in as ${client.user.tag}!`, { consoleOnly: true});
+  const guild = client.guilds.cache.get(config.guildId);
+  await guild.members.fetch();
+
   if (config.startUpCorrelatation) {
     await utils.correlateDiscordWithPartner();
     // to make sure Partner has updated data
