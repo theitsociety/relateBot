@@ -1,6 +1,6 @@
 const config = require(`./config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
 const Utils = require('./lib/utils');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const _ = require('lodash');
 const client = new Client({
   intents: [
@@ -12,8 +12,14 @@ const client = new Client({
     GatewayIntentBits.GuildInvites,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.DirectMessageReactions
-  ]
+  ], 
+  partials: [
+    Partials.Message, 
+    Partials.Channel, 
+    Partials.Reaction
+  ],
 });
+
 const utils = new Utils(client, config);
 // A pretty useful method to create a delay without blocking the whole script.
 const wait = require("timers/promises").setTimeout;
@@ -56,6 +62,41 @@ client.on('messageCreate', async msg => {
   } 
   utils.logger(`Message sent to ${client.channels.cache.get(msg.channelId).name}: ${msg.content}`, { consoleOnly: true});
 })
+
+client.on('messageReactionAdd', async (reaction, user) => {
+  // When a reaction is received, check if the structure is partial
+  if (reaction.partial) {
+      // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+      try {
+        await reaction.fetch();
+      } catch (error) {
+        utils.logger(`Something went wrong when fetching message reactions: ${error}`);
+        return;
+      }
+  }
+  if (config.registrations.autoInvite &&
+    _.get(reaction.message, 'embeds.0.title') == config.registrations.title &&
+    reaction.message.channelId == config.channels.registrationChannel &&
+    reaction.emoji.name == config.registrations.inviteEmoji) {
+
+    const email = _.chain(reaction.message)
+      .get("embeds.0.data.fields", {})
+      .find( el => config.registrations.email.includes(el.name))
+      .get('value')
+      .value();
+    if (!email || !utils.isEmail(email)) {
+      await reaction.message.reply({ content: `Not a valid email ${email}` });
+      return;
+    }
+
+    try {
+      const result = await utils.createInvite(email);
+      await reaction.message.reply({ content: result.error ? result.error : `${email} ${result.newInvite.url}` });
+    } catch (e) {
+      await reaction.message.reply({ content: `Unable to invite: ${e}`});
+    }
+  }
+});
 
 // All bot commands are handled here
 client.on('interactionCreate', async interaction => {

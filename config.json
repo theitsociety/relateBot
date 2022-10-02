@@ -9,9 +9,16 @@
   "channels": {
     "logChannel": "${{LOG_CHANNEL_ID}}",
     "welcomeChannel": "${{WELCOME_ROLE_ID}}",
-    "roleSelectionChannel": "${{ROLE_SELECTION_CHANNEL_ID}}"
+    "roleSelectionChannel": "${{ROLE_SELECTION_CHANNEL_ID}}",
+    "registrationChannel": "${{REGISTRATION_CHANNEL}}"
   },
-	"clientId": "${{CLIENT_ID}}",
+  "registrations": {
+    "autoInvite": true,
+    "title": "New Registration",
+    "inviteEmoji": "📧",
+    "email": [ "email", "Email Address" ]
+  },	
+  "clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
   "emailPartner": "google",
 	"guildId": "${{GUILD_ID}}",
