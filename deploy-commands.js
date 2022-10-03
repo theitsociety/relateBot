@@ -60,15 +60,11 @@ const commands = [
     .setDescription('Correlates Discord members and registrations via server nickname'),
 
   new SlashCommandBuilder()
-    .setName('aboutmyself')
-    .setDescription('Shows your profile if correlated with Discord account'),
-
-  new SlashCommandBuilder()
-    .setName('updatemyself')
-    .setDescription('Creates, redeems or updates your IT Society profile')
+    .setName('myprofile')
+    .setDescription('Shows, redeems or creates your IT Society profile')
     .addStringOption(option =>
       option.setName('email')
-        .setDescription('Email')
+        .setDescription('Used only to redeem or create IT Society profile')
         .setRequired(false))
     .addStringOption(option =>
       option.setName('name')
