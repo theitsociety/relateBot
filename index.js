@@ -148,7 +148,13 @@ client.on('interactionCreate', async interaction => {
 
     else if (commandName === 'emails') {
       const role = interaction.options.get('role').role.name;
-      await interaction.editReply(utils.generateEmbed( `Email List`, { role, emails: utils.getEmailsByRoles(role)}));
+      const emails = utils.getEmailsByRoles(role);
+      await interaction.editReply(utils.generateEmbed( `Email List`, { 
+        role, 
+        assignedUser: interaction.options.get('role').role.members.size, 
+        emailsRelated: emails.length, 
+        emails: emails.join('\n')
+      }));
     }
 
     else if (commandName === 'info' || commandName === 'aboutmyself') {
