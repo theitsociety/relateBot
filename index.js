@@ -116,7 +116,7 @@ client.on('interactionCreate', async interaction => {
     // Only Admins can use private commands
     if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
       utils.logger(`**${nickname}** does not have permission to execute command **${commandName}**`);
-      interaction.reply({ content: `You don't have permission`, ephemeral: true });
+      interaction.editReply({ content: `You don't have permission`, ephemeral: true });
       return;
     }
     utils.logger(`**${nickname}** executed command **${commandName}**`);
@@ -152,12 +152,12 @@ client.on('interactionCreate', async interaction => {
     }
 
     else if (commandName === 'info' || commandName === 'aboutmyself') {
-      const profile =  commandName == 'aboutmyself' ? user : interaction.options.get('user');
-      const userInfo = utils.members.get(profile.id);
+      const profile =  commandName == 'aboutmyself' ? user : interaction.options.get('user').member;
+      const userInfo = await utils.getUserInfo(profile);
       if (!userInfo || !userInfo.partnerId) {
-        await interaction.editReply({ content: `Registration not found for **${utils.getNickname(profile)}**`, ephemeral: true });
+        await interaction.editReply(`Registration not found for **${utils.getNickname(profile)}**`);
       } else {
-        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
+        await interaction.editReply(utils.generateUserInfoEmbed(userInfo));
       }
     }
 
@@ -172,31 +172,33 @@ client.on('interactionCreate', async interaction => {
       await interaction.editReply(profileOutput);
     }
 
-    else if (commandName === 'updatemyself') {
-      if (_.isEmpty(interaction.options.data)) {
-        await interaction.editReply({ content: `Requires one of the options`, ephemeral: true });
-        return;        
-      }
-      const updates = utils.mapOptions(interaction.options.data);
-      const userInfo = utils.members.get(user.id);
+    else if (commandName === 'myprofile') {
+      const updates = _.omit(utils.mapOptions(interaction.options.data), 'Email Address');
       const email = _.get(interaction.options.get('email'), 'value');
+      const userInfo = await utils.getUserInfo(user);
 
-      if (email && !utils.isEmail(email)) {
-        await interaction.editReply({ content: `Not a valid email **${email}**`, ephemeral: true });
-        return;
-      } 
-
-      // update existing user
       if (utils.isCorrelatedProfile(userInfo)) {
-        updates["Full Name"] = updates["Full Name"] || userInfo.nickname;
-        await utils.updateProfile(userInfo, updates);
-        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
-      } 
-      // redeem email address
-      else {
-        const result = await utils.redeemProfile(userInfo, updates);
-        await interaction.editReply({ content: result, ephemeral: true });
-        await interaction.editReply({ ...utils.generateUserInfo(userInfo), ephemeral: true });
+        if (!_.isEmpty(updates)) { 
+          await utils.updateProfile(userInfo, updates);
+          await interaction.editReply(`Profile updated`);
+        }
+        return await interaction.editReply(utils.generateUserInfoEmbed(userInfo));
+      }
+
+      if (!email){
+        return await interaction.editReply(`Unable to locate your profile. Please redeem or generate with your email address first`);
+      }
+
+      if (!utils.isEmail(email)) {
+        return await interaction.editReply(`Not a valid email **${email}**`);
+      }
+
+      const result = await utils.redeemProfile(userInfo, updates, email);
+      if (result.success) {
+        await interaction.editReply(result.success);
+        await interaction.editReply(utils.generateUserInfoEmbed(userInfo));
+      } else {
+        await interaction.editReply(result.error);
       }
     }
 
