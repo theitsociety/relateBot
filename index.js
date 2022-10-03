@@ -168,8 +168,10 @@ client.on('interactionCreate', async interaction => {
     }
 
     else if (commandName === 'correlate') {
-      await interaction.editReply(`Correlation started, please check logs`);
-      await utils.correlateDiscordWithPartner();
+      await interaction.editReply(`Correlation started`);
+      await interaction.editReply(await utils.correlateDiscordWithPartner());
+      await interaction.editReply(`Correlation ended`);
+
     }
 
     else if (commandName === 'register') {
