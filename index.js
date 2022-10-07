@@ -149,16 +149,16 @@ client.on('interactionCreate', async interaction => {
     else if (commandName === 'emails') {
       const role = _.get(interaction.options.get('role'), 'role.name');
       if (role) {
-        const emails = utils.getEmailsByRoles(role);
+        const results = utils.getEmailsByRoles(role);
         await interaction.editReply({ ...utils.generateEmbed( `Email List`, { 
           role, 
           assignedUser: interaction.options.get('role').role.members.size, 
-          emailsRelated: _.get(emails, 'optedIn.length', 0) + _.get(emails, 'optedOut.length', 0), 
-          optedIn: _.get(emails, 'optedIn.length', 0),
-          optedOut:  _.get(emails, 'optedOut.length', 0),
-          emails: emails.optedIn.join('\n')
+          emailsRelated: _.get(results, 'optedIn.length', 0) + _.get(results, 'optedOut.length', 0), 
+          optedIn: _.get(results, 'optedIn.length', 0),
+          optedOut:  _.get(results, 'optedOut.length', 0),
+          emails: results.optedIn.map(el => el['Email Address']).join('\n')
         }), files: [{
-          attachment: Buffer.from(utils.prepareEmailBulkUploadFile(role, emails.optedIn, true), "utf-8"),
+          attachment: Buffer.from(utils.prepareEmailBulkUploadFile(role, results.optedIn, true), "utf-8"),
           name: `bulkUploadMe-${new Date().toISOString()}.csv`
         }] });  
       } else {
@@ -167,8 +167,8 @@ client.on('interactionCreate', async interaction => {
         const bulkUploadContent = [];
         let withHeader = true;
         allRoles.forEach(role => {
-          const emails = utils.getEmailsByRoles(role);
-          bulkUploadContent.push(utils.prepareEmailBulkUploadFile(role, emails.optedIn, withHeader));
+          const results = utils.getEmailsByRoles(role);
+          bulkUploadContent.push(utils.prepareEmailBulkUploadFile(role, results.optedIn, withHeader));
           withHeader = false;
         });
         await interaction.editReply({ 
