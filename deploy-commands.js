@@ -53,7 +53,7 @@ const commands = [
     .addRoleOption(option =>
       option.setName('role')
         .setDescription('The role')
-        .setRequired(true)),
+        .setRequired(false)),
 
   new SlashCommandBuilder()
     .setName('correlate')
