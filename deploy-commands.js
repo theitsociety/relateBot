@@ -3,14 +3,6 @@ const { REST } = require('@discordjs/rest');
 const { clientId, guildId, token } = require(`./config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
 
 const commands = [
-	new SlashCommandBuilder()
-    .setName('invite')
-    .setDescription('Creates invite for an email address!')
-    .addStringOption(option =>
-      option.setName('email')
-        .setDescription('User email')
-        .setRequired(true)),
-
   new SlashCommandBuilder()
     .setName('register')
     .setDescription('Registers a user!')
@@ -32,11 +24,11 @@ const commands = [
         .setRequired(false)),
 
   new SlashCommandBuilder()
-    .setName('email')
-    .setDescription('Returns email of a user if registered')
-    .addUserOption(option =>
-      option.setName('user')
-        .setDescription('The user')
+    .setName('invite')
+    .setDescription('Creates invite for an email address!')
+    .addStringOption(option =>
+      option.setName('email')
+        .setDescription('User email')
         .setRequired(true)),
 
   new SlashCommandBuilder()
@@ -46,19 +38,7 @@ const commands = [
       option.setName('user')
         .setDescription('The user')
         .setRequired(true)),
-
-  new SlashCommandBuilder()
-    .setName('emails')
-    .setDescription('Returns email list for a role')
-    .addRoleOption(option =>
-      option.setName('role')
-        .setDescription('The role')
-        .setRequired(false)),
-
-  new SlashCommandBuilder()
-    .setName('correlate')
-    .setDescription('Correlates Discord members and registrations via server nickname'),
-
+  
   new SlashCommandBuilder()
     .setName('myprofile')
     .setDescription('Shows, redeems or creates your IT Society profile')
@@ -79,6 +59,18 @@ const commands = [
         .setDescription('Job Title')
         .setRequired(false)),
 
+  new SlashCommandBuilder()
+    .setName('emails')
+    .setDescription('Returns email list for a role')
+    .addRoleOption(option =>
+      option.setName('role')
+        .setDescription('The role')
+        .setRequired(false)),
+
+  new SlashCommandBuilder()
+    .setName('correlate')
+    .setDescription('Correlates Discord members and registrations via server nickname'),
+    
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
