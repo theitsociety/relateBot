@@ -147,14 +147,37 @@ client.on('interactionCreate', async interaction => {
     }
 
     else if (commandName === 'emails') {
-      const role = interaction.options.get('role').role.name;
-      const emails = utils.getEmailsByRoles(role);
-      await interaction.editReply(utils.generateEmbed( `Email List`, { 
-        role, 
-        assignedUser: interaction.options.get('role').role.members.size, 
-        emailsRelated: emails.length, 
-        emails: emails.join('\n')
-      }));
+      const role = _.get(interaction.options.get('role'), 'role.name');
+      if (role) {
+        const emails = utils.getEmailsByRoles(role);
+        await interaction.editReply({ ...utils.generateEmbed( `Email List`, { 
+          role, 
+          assignedUser: interaction.options.get('role').role.members.size, 
+          emailsRelated: _.get(emails, 'optedIn.length', 0) + _.get(emails, 'optedOut.length', 0), 
+          optedIn: _.get(emails, 'optedIn.length', 0),
+          optedOut:  _.get(emails, 'optedOut.length', 0),
+          emails: emails.optedIn.join('\n')
+        }), files: [{
+          attachment: Buffer.from(utils.prepareEmailBulkUploadFile(role, emails.optedIn, true), "utf-8"),
+          name: `bulkUploadMe-${new Date().toISOString()}.csv`
+        }] });  
+      } else {
+        const allRoles = _.cloneDeep(_.values(config.roles));
+        allRoles.push("all");
+        const bulkUploadContent = [];
+        let withHeader = true;
+        allRoles.forEach(role => {
+          const emails = utils.getEmailsByRoles(role);
+          bulkUploadContent.push(utils.prepareEmailBulkUploadFile(role, emails.optedIn, withHeader));
+          withHeader = false;
+        });
+        await interaction.editReply({ 
+          files: [{
+            attachment: Buffer.from(bulkUploadContent.join('\n'), "utf-8"),
+            name: `bulkUploadMe-${new Date().toISOString()}.csv`
+          }]
+        });
+      }
     }
 
     else if (commandName === 'info' || commandName === 'aboutmyself') {
