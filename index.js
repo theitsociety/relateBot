@@ -137,15 +137,6 @@ client.on('interactionCreate', async interaction => {
       }
     }
 
-    else if (commandName === 'email') {
-      const userInfo = utils.members.get(user.id);
-      if (!userInfo) {
-        await interaction.editReply({ content: `Email not found for **${nickname}**`, ephemeral: true });
-      } else {
-        await interaction.editReply(`Email of **${nickname}** is found as **${userInfo['Email Address']}**`);
-      }
-    }
-
     else if (commandName === 'emails') {
       const role = _.get(interaction.options.get('role'), 'role.name');
       if (role) {
@@ -180,8 +171,8 @@ client.on('interactionCreate', async interaction => {
       }
     }
 
-    else if (commandName === 'info' || commandName === 'aboutmyself') {
-      const profile =  commandName == 'aboutmyself' ? user : interaction.options.get('user').member;
+    else if (commandName === 'info') {
+      const profile =  interaction.options.get('user').member;
       const userInfo = await utils.getUserInfo(profile);
       if (!userInfo || !userInfo.partnerId) {
         await interaction.editReply(`Registration not found for **${utils.getNickname(profile)}**`);
