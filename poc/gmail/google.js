@@ -1,6 +1,6 @@
 
 
-const { google } = require('googleapis');
+const { google, admin_directory_v1 } = require('googleapis');
 const MailComposer = require('nodemailer/lib/mail-composer');
 const BaseHelper = require('../../lib/baseHelper');
 const fs = require('fs');
@@ -45,6 +45,50 @@ class GoogleClient extends BaseHelper {
     return gmail;
   }
 
+  async _getDirectoryService() {
+    await this._getTokenWithRefresh();
+    const service = google.admin({version: 'directory_v1', auth: this.oAuth2Client});
+    return service;
+  }
+
+  async listGroup(groupKey) {
+    const service = await this._getDirectoryService();
+    return await service.members.list({
+      groupKey
+    });
+  }
+
+  async addMemberToGroups(groups, email, member) {
+    const service = await this._getDirectoryService();
+    const calls = [];
+
+    _.castArray(groups).forEach( groupKey => {
+      calls.push(service.members.insert({
+        groupKey,
+        requestBody: {
+          email,
+          member,
+          role: 'MEMBER',
+          type: 'USER'
+        }
+      }));
+    });
+    return Promise.all(calls);
+  }
+
+  async deleteMemberFromGroups(groups, memberKey) {
+    const service = await this._getDirectoryService();
+    const calls = [];
+
+    _.castArray(groups).forEach( groupKey => {
+      calls.push(service.members.delete({
+        groupKey,
+        memberKey
+      }));
+    });
+    return Promise.all(calls);
+  }
+
   _encode(message) {
     return Buffer.from(message).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   };
@@ -86,8 +130,10 @@ const partnerConfig = require('../../config_prod.json').partnerConfig.google;
 const main = async () => {
   
   const googleClient = new GoogleClient(partnerConfig);
-  const messageId = await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
-  return messageId;
+  return  _.get(await googleClient.listGroup(), 'data.members');
+  return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
+  return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");
+  return await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
 };
 
 main()
