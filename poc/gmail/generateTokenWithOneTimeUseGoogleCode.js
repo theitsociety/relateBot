@@ -12,12 +12,15 @@ const { stdin: input, stdout: output } = require('process');
   const rl = readline.createInterface({ input, output });
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
   
-  const GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
+  const scope = [
+    'https://www.googleapis.com/auth/gmail.send',
+    'https://www.googleapis.com/auth/admin.directory.group'
+  ];
   
   const url = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
-    scope: GMAIL_SCOPES,
+    scope,
   });
   
   console.log('Authorize this app by visiting this url:')
