@@ -143,7 +143,7 @@ client.on('interactionCreate', async interaction => {
         const results = utils.getEmailsByRoles(role);
         await interaction.editReply({ ...utils.generateEmbed( `Email List`, { 
           role, 
-          assignedUser: interaction.options.get('role').role.members.size, 
+          assignedUsers: interaction.options.get('role').role.members.size, 
           emailsRelated: _.get(results, 'optedIn.length', 0) + _.get(results, 'optedOut.length', 0), 
           optedIn: _.get(results, 'optedIn.length', 0),
           optedOut:  _.get(results, 'optedOut.length', 0),
@@ -163,6 +163,7 @@ client.on('interactionCreate', async interaction => {
           withHeader = false;
         });
         await interaction.editReply({ 
+          ...utils.getEmailGroupStatsEmbed(),
           files: [{
             attachment: Buffer.from(bulkUploadContent.join('\n'), "utf-8"),
             name: `bulkUploadMe-${new Date().toISOString()}.csv`
