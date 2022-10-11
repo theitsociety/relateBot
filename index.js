@@ -171,7 +171,6 @@ client.on('interactionCreate', async interaction => {
         }] });  
       } else {
         const allRoles = _.cloneDeep(_.values(config.roles));
-        allRoles.push("all");
         const bulkUploadContent = [];
         let withHeader = true;
         allRoles.forEach(role => {
