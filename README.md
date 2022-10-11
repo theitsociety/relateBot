@@ -34,6 +34,12 @@ Generate `config_prod.json` file. `config.json` will help guide you.
 ➜  relateBot git:(main) node run prod
 ```
 
+### For pm2 users
+Update config file to point correct npm path
+```
+➜  relateBot git:(main) pm2 start configs/pm2/prod.yml
+```
+
 ### Extend for your needs
 Currently **relateBot** has **Notion** DB integration and **in-memory** data management option. Factory structure defined in `lib/clients/index.js` file can be enhanced by adding new integrations.  
 
