@@ -41,22 +41,34 @@ client.on('ready', async () => {
 
 // We will correlate this with recently added user
 client.on("inviteDelete", (invite) => {
+  if (invite.guild.id !== config.guildId) {
+    return;
+  }
   utils.setRecentlyConsumedInviteCode (invite.code);
 });
 
 // Use recently consumed invite to correlate Discord member and registered user. 
 client.on("guildMemberAdd", async (member) => {
+  if (member.guild.id !== config.guildId) {
+    return;
+  }
   // wait until single use invite is deleted
   await wait(1000);
   await utils.relateRecentlyConsumedInviteCode(member);
 });
 
 client.on("guildMemberRemove", async (member) => {
+  if (member.guild.id !== config.guildId) {
+    return;
+  }
   await utils.purgeMemberData(member);
 });
 
 // Register an event to log bot messages
 client.on('messageCreate', async msg => {
+  if (msg.guildId !== config.guildId) {
+    return;
+  }
   if (!msg.author.bot || msg.author.username != 'relateBot') {
     return
   } 
@@ -64,6 +76,9 @@ client.on('messageCreate', async msg => {
 })
 
 client.on('messageReactionAdd', async (reaction, user) => {
+  if (reaction.message.guildId !== config.guildId) {
+    return;
+  }
   // When a reaction is received, check if the structure is partial
   if (reaction.partial) {
       // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
@@ -100,7 +115,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 // All bot commands are handled here
 client.on('interactionCreate', async interaction => {
-
+  if (interaction.guildId !== config.guildId) {
+    return;
+  }
   if (!interaction.isChatInputCommand()){
     return;
   } 
