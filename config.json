@@ -80,6 +80,7 @@
     }
   },
   "roles": {
+    "all": "all",
     "🤳": "ios-thrive",
     "🤩": "qa-sdet",
     "🤠": "tech-talks",
