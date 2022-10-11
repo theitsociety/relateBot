@@ -1,0 +1,10 @@
+apps:
+  - name: relateBot-prod
+    script: "/Users/tyson.turkoz/.nvm/versions/node/v18.9.0/bin/npm"
+    args: 'run prod'
+    max_restarts: 1
+    min_uptime: 30000
+    error_file: /var/log/services/pm2/relateBot-prod-error.log
+    out_file: /var/log/services/pm2/relateBot-prod.log
+    log_date_format : YYYY-MM-DD HH:mm:ss.SSS Z
+    log_type: json

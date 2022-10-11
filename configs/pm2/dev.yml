@@ -1,0 +1,10 @@
+apps:
+  - name: relateBot-dev
+    script: "/Users/tyson.turkoz/.nvm/versions/node/v18.9.0/bin/npm"
+    args: 'run dev'
+    max_restarts: 1
+    min_uptime: 30000
+    error_file: /var/log/services/pm2/relateBot-dev-error.log
+    out_file: /var/log/services/pm2/relateBot-dev.log
+    log_date_format : YYYY-MM-DD HH:mm:ss.SSS Z
+    log_type: json
