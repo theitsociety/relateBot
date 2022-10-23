@@ -71,6 +71,10 @@ const commands = [
     .setName('correlate')
     .setDescription('Correlates Discord members and registrations via server nickname'),
     
+  new SlashCommandBuilder()
+    .setName('skills')
+    .setDescription('Show strong skills of IT Society members')
+
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
