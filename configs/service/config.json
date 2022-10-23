@@ -36,9 +36,17 @@
         "Discord Invite": "invite",
         "Status": "Status"
       },
+      "skills": [
+        "Programming Languages",
+        "Software Frameworks",
+        "Additional Tooling",
+        "Data Technologies",
+        "Cloud Technologies"
+      ],
       "request": {
         "baseURL": "https://api.notion.com/v1",
-        "database": "${{DATABASE_ID}}",
+        "registationDatabase": "${{DATABASE_ID}}",
+        "skillDatabase": "${{DATABASE_ID}}",
         "headers": { 
           "Notion-Version": "2022-06-28",
           "Authorization": "Bearer ${{SECRET}}",
