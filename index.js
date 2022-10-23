@@ -202,13 +202,18 @@ client.on('interactionCreate', async interaction => {
       await interaction.editReply(`Correlation started`);
       await interaction.editReply(await utils.correlateDiscordWithPartner());
       await interaction.editReply(`Correlation ended`);
-
     }
 
     else if (commandName === 'register') {
       const options = utils.mapOptions(interaction.options.data);
       const profileOutput = await utils.createProfile(options);
       await interaction.editReply(profileOutput);
+    }
+
+    else if (commandName === 'skills') {
+      await interaction.editReply(`Skill evaluation started`);
+      await interaction.editReply(await utils.evaluateSkills());
+      await interaction.editReply(`Skill evaluation ended`);
     }
 
     else if (commandName === 'myprofile') {
