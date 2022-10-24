@@ -81,7 +81,8 @@
           "textEncoding": "base64"
         },
         "templates": {
-          "welcomeEmail": "welcomeEmail.html"
+          "welcomeEmail": "welcomeEmail.html",
+          "reInviteEmail": "reInviteEmail.html"
         },
         "domain": "itsociety.org"
       }
