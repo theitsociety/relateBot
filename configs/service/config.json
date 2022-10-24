@@ -3,8 +3,8 @@
     "admin": "${{ADMIN_ROLE_ID}}"
   },
   "publicCommands": [
-    "aboutmyself",
-    "myprofile"
+    "myprofile",
+    "skills"
   ],
   "channels": {
     "logChannel": "${{LOG_CHANNEL_ID}}",

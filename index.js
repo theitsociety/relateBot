@@ -124,7 +124,7 @@ client.on('interactionCreate', async interaction => {
   let { commandName } = interaction;
 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: ["invite", "register"].includes(commandName) ? false : true });
+  await interaction.deferReply({ephemeral: ["invite", "register", "skills"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
