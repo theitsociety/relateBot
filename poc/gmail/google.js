@@ -121,15 +121,25 @@ class GoogleClient extends BaseHelper {
     return this.sendMail(content);
   };
 
+  async sendLandingEmail(options) {
+    const content = {
+      ...this.partnerConfig.email.defaults,
+      to: options.email,
+      subject: 'IT Society > Welcome to Discord Server 👋',
+      html: this.templates.landingEmail(options),
+    };
+    return this.sendMail(content);
+  };
 }
 
 module.exports = GoogleClient;
 
-const partnerConfig = require('../../config_prod.json').partnerConfig.google;
+const partnerConfig = require('../../configs/service/config_prod.json').partnerConfig.google;
 
 const main = async () => {
   
   const googleClient = new GoogleClient(partnerConfig);
+  return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
   return  _.get(await googleClient.listGroup(), 'data.members');
   return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
   return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");

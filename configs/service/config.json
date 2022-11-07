@@ -82,6 +82,7 @@
         },
         "templates": {
           "welcomeEmail": "welcomeEmail.html",
+          "landingEmail": "landingEmail.html",
           "reInviteEmail": "reInviteEmail.html"
         },
         "domain": "itsociety.org"
