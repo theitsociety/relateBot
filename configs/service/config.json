@@ -101,7 +101,8 @@
     "👶": "practice-programming-beginner",
     "📏": "data-engineer",
     "🧡": "eng-management",
-    "🏋️‍♀️": "women-in-tech"
+    "🏋️‍♀️": "women-in-tech",
+    "💻": "cplusplus-deep-dive"
   },
   "startUpCorrelatation": false,
   "syncPeriod": 300000,
