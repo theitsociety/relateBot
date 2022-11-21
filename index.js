@@ -70,7 +70,25 @@ client.on('messageCreate', async msg => {
     return;
   }
   if (!msg.author.bot || msg.author.username != 'relateBot') {
-    return
+    if (msg.channelId === config.channels.referralsChannel &&
+      _.get(msg, 'embeds.0.title') == config.referrals.title) {
+      try {
+        // wait some time to make sure record created on data partner 
+        await wait(1000);
+        const email = utils.getValueFromEmbed(msg, config.referrals.email);
+        const result = await utils.inviteReferral(email, msg.id);
+        if (result.error) {
+          await msg.reply({ content: result.error });
+        }
+      } catch (e) {
+        await msg.reply({ content: `Unable to invite: ${e}`});
+      }
+    } else if (msg.channelId === config.channels.registrationChannel &&
+      _.get(msg, 'embeds.0.title') == config.registrations.title) {
+        const email = utils.getValueFromEmbed(msg, config.referrals.email);
+        await utils.finalizeReferral(email);
+    }
+    return;
   } 
   utils.logger(`Message sent to ${client.channels.cache.get(msg.channelId).name}: ${msg.content}`, { consoleOnly: true});
 })
@@ -208,6 +226,7 @@ client.on('interactionCreate', async interaction => {
       const options = utils.mapOptions(interaction.options.data);
       const profileOutput = await utils.createProfile(options);
       await interaction.editReply(profileOutput);
+      await utils.finalizeReferral(options["Email Address"]);
     }
 
     else if (commandName === 'skills') {
