@@ -85,7 +85,7 @@ client.on('messageCreate', async msg => {
       }
     } else if (msg.channelId === config.channels.registrationChannel &&
       _.get(msg, 'embeds.0.title') == config.registrations.title) {
-        const email = utils.getValueFromEmbed(msg, config.referrals.email);
+        const email = utils.getValueFromEmbed(msg, 'email');
         await utils.finalizeReferral(email);
     }
     return;
