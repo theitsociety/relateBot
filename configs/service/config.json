@@ -20,7 +20,7 @@
     "email": [ "email", "Email Address" ]
   },
   "referrals": {
-    "title": "New Invite",
+    "title": "New Invitation",
     "inviteEmoji": "📧",
     "remindEmoji": "🎗",
     "registeredEmoji": "🎫",
