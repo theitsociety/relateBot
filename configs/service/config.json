@@ -20,12 +20,12 @@
     "email": [ "email", "Email Address" ]
   },
   "referrals": {
-    "title": "New Referral Submission",
+    "title": "New Invite",
     "inviteEmoji": "📧",
     "remindEmoji": "🎗",
     "registeredEmoji": "🎫",
     "remindAfter": 604800000,
-    "email": "Referral Email"
+    "email": "Invitee Email"
   },
   "clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
