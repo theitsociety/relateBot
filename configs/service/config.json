@@ -111,7 +111,8 @@
           "landingEmail": "landingEmail.html",
           "reInviteEmail": "reInviteEmail.html",
           "referralEmail": "referralEmail.html",
-          "referralReminderEmail": "referralReminderEmail.html"
+          "referralReminderEmail": "referralReminderEmail.html",
+          "referrerAckEmail": "referrerAckEmail.html"
         },
         "domain": "itsociety.org"
       }
