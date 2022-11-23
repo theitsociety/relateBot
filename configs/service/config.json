@@ -131,7 +131,8 @@
     "📏": "data-engineer",
     "🧡": "eng-management",
     "🏋️‍♀️": "women-in-tech",
-    "💻": "cplusplus-deep-dive"
+    "💻": "cplusplus-deep-dive",
+    "🧑🏻‍💻": "hands-on",
   },
   "startUpCorrelatation": false,
   "syncPeriod": 300000,
