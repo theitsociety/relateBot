@@ -17,6 +17,7 @@
     "autoInvite": true,
     "title": "New Registration",
     "inviteEmoji": "📧",
+    "remindAfter": 604800000,
     "email": [ "email", "Email Address" ]
   },
   "referrals": {
@@ -24,6 +25,7 @@
     "inviteEmoji": "📧",
     "remindEmoji": "🎗",
     "registeredEmoji": "🎫",
+    "retiredEmoji": "💤",
     "remindAfter": 604800000,
     "email": "Invitee Email"
   },
@@ -132,7 +134,7 @@
     "🧡": "eng-management",
     "🏋️‍♀️": "women-in-tech",
     "💻": "cplusplus-deep-dive",
-    "🧑🏻‍💻": "hands-on",
+    "🧑🏻‍💻": "hands-on"
   },
   "startUpCorrelatation": false,
   "syncPeriod": 300000,
