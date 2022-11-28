@@ -25,7 +25,7 @@
     "inviteEmoji": "📧",
     "remindEmoji": "🎗",
     "registeredEmoji": "🎫",
-    "retiredEmoji": "💤",
+    "dormantEmoji": "💤",
     "remindAfter": 604800000,
     "email": "Invitee Email"
   },
