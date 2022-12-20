@@ -122,6 +122,8 @@
   },
   "roles": {
     "all": "all",
+    "moderator": "moderator",
+    "mentor": "mentor",
     "🤳": "ios-thrive",
     "🤩": "qa-sdet",
     "🤠": "tech-talks",
