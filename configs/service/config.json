@@ -122,7 +122,7 @@
   },
   "roles": {
     "all": "all",
-    "moderator": "moderator",
+    "focus-group-coordinator": "focus-group-coordinator",
     "mentor": "mentor",
     "🤳": "ios-thrive",
     "🤩": "qa-sdet",
