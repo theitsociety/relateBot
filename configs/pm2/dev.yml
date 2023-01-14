@@ -2,6 +2,8 @@ apps:
   - name: relateBot-dev
     script: "/Users/tyson.turkoz/.nvm/versions/node/v18.9.0/bin/npm"
     args: 'run dev'
+    env: 
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
     max_restarts: 1
     min_uptime: 30000
     error_file: /var/log/services/pm2/relateBot-dev-error.log

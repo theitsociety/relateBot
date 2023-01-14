@@ -26,12 +26,12 @@ Generate `config_prod.json` file. `config.json` will help guide you.
 
 ### Deploy the commands
 ```
-➜  relateBot git:(main) node run deploy
+➜  relateBot git:(main) npm run deploy
 ```
 
 ### Run Your Bot
 ```
-➜  relateBot git:(main) node run prod
+➜  relateBot git:(main) npm run prod
 ```
 
 ### For pm2 users

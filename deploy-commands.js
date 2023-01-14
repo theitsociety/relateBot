@@ -73,7 +73,19 @@ const commands = [
     
   new SlashCommandBuilder()
     .setName('skills')
-    .setDescription('Show strong skills of IT Society members')
+    .setDescription('Show strong skills of IT Society members'),
+
+  new SlashCommandBuilder()
+    .setName('assign')
+    .setDescription('Assign new member to community builder')
+    .addStringOption(option =>
+      option.setName('email')
+        .setDescription('New member email to be assigned')
+        .setRequired(true))
+    .addUserOption(option =>
+      option.setName('user')
+        .setDescription('Commuinity builder user')
+        .setRequired(true))
 
 ].map(command => command.toJSON());
 

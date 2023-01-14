@@ -1,6 +1,7 @@
 {
   "allowedRoles": {
-    "admin": "${{ADMIN_ROLE_ID}}"
+    "admin": "${{ADMIN_ROLE_ID}}",
+    "community-builder": "${{COMMUNITY-BUILDER}}"
   },
   "publicCommands": [
     "myprofile",
@@ -11,7 +12,9 @@
     "welcomeChannel": "${{WELCOME_ROLE_ID}}",
     "roleSelectionChannel": "${{ROLE_SELECTION_CHANNEL_ID}}",
     "registrationChannel": "${{REGISTRATION_CHANNEL}}",
-    "referralsChannel": "${{REFERRALS_CHANNEL}}"
+    "referralsChannel": "${{REFERRALS_CHANNEL}}",
+    "communityBuildersChannel": "${{COMMUNITY_BUILDERS_CHANNEL}}",
+    "onboardingCategory": "${{ONBOARDING_CATEGORY}}"
   },
   "registrations": {
     "autoInvite": true,
@@ -28,6 +31,9 @@
     "dormantEmoji": "💤",
     "remindAfter": 604800000,
     "email": "Invitee Email"
+  },
+  "onboarding": {
+    "remindAfter": 172800000
   },
   "clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
@@ -114,7 +120,9 @@
           "reInviteEmail": "reInviteEmail.html",
           "referralEmail": "referralEmail.html",
           "referralReminderEmail": "referralReminderEmail.html",
-          "referrerAckEmail": "referrerAckEmail.html"
+          "referrerAckEmail": "referrerAckEmail.html",
+          "onboardingAssignmentEmail": "onboardingAssignmentEmail",
+          "onboardingReminderEmail": "onboardingReminderEmail"
         },
         "domain": "itsociety.org"
       }

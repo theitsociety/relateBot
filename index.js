@@ -142,7 +142,7 @@ client.on('interactionCreate', async interaction => {
   let { commandName } = interaction;
 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: ["invite", "register", "skills"].includes(commandName) ? false : true });
+  await interaction.deferReply({ephemeral: ["invite", "register", "skills", "assign"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
@@ -163,7 +163,7 @@ client.on('interactionCreate', async interaction => {
         await interaction.editReply({ content: `Not a valid email ${email}`, ephemeral: true });
         return;
       }
-      const result = await utils.createInvite(email, null, true);
+      const result = await utils.createInvite(email, null);
 
       if (result.error) {
         await interaction.editReply({ content: result.error, ephemeral: true });
@@ -213,6 +213,17 @@ client.on('interactionCreate', async interaction => {
         await interaction.editReply(`Registration not found for **${utils.getNickname(profile)}**`);
       } else {
         await interaction.editReply(utils.generateUserInfoEmbed(userInfo));
+      }
+    }
+
+    else if (commandName === 'assign') {
+      const options = utils.mapOptions(interaction.options.data);
+      options.communityBuilder = interaction.options.get('user').member;
+      const result = await utils.assignMember(options);
+      if (result.success) {
+        await interaction.editReply(result.success);
+      } else {
+        await interaction.editReply(result.error);
       }
     }
 
