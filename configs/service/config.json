@@ -121,8 +121,8 @@
           "referralEmail": "referralEmail.html",
           "referralReminderEmail": "referralReminderEmail.html",
           "referrerAckEmail": "referrerAckEmail.html",
-          "onboardingAssignmentEmail": "onboardingAssignmentEmail",
-          "onboardingReminderEmail": "onboardingReminderEmail"
+          "onboardingAssignmentEmail": "onboardingAssignmentEmail.html",
+          "onboardingReminderEmail": "onboardingReminderEmail.html"
         },
         "domain": "itsociety.org"
       }
