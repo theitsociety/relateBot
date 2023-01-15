@@ -25,7 +25,7 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('invite')
-    .setDescription('Creates invite for an email address!')
+    .setDescription('Creates Discord invite for an email address!')
     .addStringOption(option =>
       option.setName('email')
         .setDescription('User email')
