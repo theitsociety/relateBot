@@ -217,9 +217,14 @@ client.on('interactionCreate', async interaction => {
     }
 
     else if (commandName === 'assign') {
-      const options = utils.mapOptions(interaction.options.data);
+      const options = utils.mapOptions(interaction.options.data[0].options);
       options.communityBuilder = interaction.options.get('user').member;
-      const result = await utils.assignMember(options);
+      let result = {};
+      if (interaction.options.data[0].name == 'community-builder') {
+        result = await utils.assignMember(options);
+      } else if (interaction.options.data[0].name == 'mentor') {
+        result.success = "Skipped"
+      }
       if (result.success) {
         await interaction.editReply(result.success);
       } else {

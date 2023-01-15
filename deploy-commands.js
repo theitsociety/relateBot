@@ -77,15 +77,31 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('assign')
-    .setDescription('Assign new member to community builder')
-    .addStringOption(option =>
-      option.setName('email')
-        .setDescription('New member email to be assigned')
-        .setRequired(true))
-    .addUserOption(option =>
-      option.setName('user')
-        .setDescription('Commuinity builder user')
-        .setRequired(true))
+    .setDescription('Assign a member to community builder / mentor')
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('mentor')
+        .setDescription('Assign a mentor')
+        .addStringOption(option =>
+          option.setName('email')
+            .setDescription('The member\'s email to be assigned')
+            .setRequired(true))
+        .addUserOption(option =>
+          option.setName('user')
+            .setDescription('Commuinity Builder user')
+            .setRequired(true)))      
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName('community-builder')
+        .setDescription('Assign a community-builder')
+        .addStringOption(option =>
+          option.setName('email')
+            .setDescription('The member\'s email to be assigned')
+            .setRequired(true))
+        .addUserOption(option =>
+          option.setName('user')
+            .setDescription('Mentor user')
+            .setRequired(true))) 
 
 ].map(command => command.toJSON());
 
