@@ -14,7 +14,8 @@
     "registrationChannel": "${{REGISTRATION_CHANNEL}}",
     "referralsChannel": "${{REFERRALS_CHANNEL}}",
     "communityBuildersChannel": "${{COMMUNITY_BUILDERS_CHANNEL}}",
-    "onboardingCategory": "${{ONBOARDING_CATEGORY}}"
+    "onboardingCategory": "${{ONBOARDING_CATEGORY}}",
+    "mentorshipCategory": "${{MENTORSHIP_CATEGORY}}"
   },
   "registrations": {
     "autoInvite": true,
@@ -122,7 +123,8 @@
           "referralReminderEmail": "referralReminderEmail.html",
           "referrerAckEmail": "referrerAckEmail.html",
           "onboardingAssignmentEmail": "onboardingAssignmentEmail.html",
-          "onboardingReminderEmail": "onboardingReminderEmail.html"
+          "onboardingReminderEmail": "onboardingReminderEmail.html",
+          "mentorAssignmentEmail": "mentorAssignmentEmail.html"
         },
         "domain": "itsociety.org"
       }

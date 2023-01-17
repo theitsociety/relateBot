@@ -82,14 +82,22 @@ const commands = [
       subcommand
         .setName('mentor')
         .setDescription('Assign a mentor')
-        .addStringOption(option =>
-          option.setName('email')
-            .setDescription('The member\'s email to be assigned')
+        .addUserOption(option =>
+          option.setName('mentee')
+            .setDescription('Mentee user')
             .setRequired(true))
         .addUserOption(option =>
-          option.setName('user')
-            .setDescription('Commuinity Builder user')
-            .setRequired(true)))      
+          option.setName('mentor')
+            .setDescription('Mentor user')
+            .setRequired(true))
+        .addStringOption(option =>
+          option.setName('category')
+            .setDescription('Mentorship category such as qa, se, security, data, mobil, security')
+            .setRequired(true))
+        .addStringOption(option =>
+          option.setName('page')
+            .setDescription('Link to Notion page created for the mentorship service')
+            .setRequired(true)))     
     .addSubcommand(subcommand =>
       subcommand
         .setName('community-builder')
@@ -100,7 +108,7 @@ const commands = [
             .setRequired(true))
         .addUserOption(option =>
           option.setName('user')
-            .setDescription('Mentor user')
+            .setDescription('Community Builder user')
             .setRequired(true))) 
 
 ].map(command => command.toJSON());
