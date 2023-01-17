@@ -1,7 +1,8 @@
 {
   "allowedRoles": {
     "admin": "${{ADMIN_ROLE_ID}}",
-    "community-builder": "${{COMMUNITY-BUILDER}}"
+    "community-builder": "${{COMMUNITY-BUILDER}}",
+    "mentor-relations": "{{MENTOR-RELATIONS}}"
   },
   "publicCommands": [
     "myprofile",
