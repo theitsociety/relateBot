@@ -37,6 +37,9 @@
   "onboarding": {
     "remindAfter": 172800000
   },
+  "mentorship": {
+    "remindAfter": 2592000000
+  },
   "clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
   "emailPartner": "google",
@@ -151,5 +154,6 @@
   },
   "startUpCorrelatation": false,
   "syncPeriod": 300000,
+  "syncPeriodActivityInMentorshipChannels": 86400000,
   "token": "${{TOKEN}}"
 }

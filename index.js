@@ -37,6 +37,7 @@ client.on('ready', async () => {
   }
   await utils.synMemberData();
   await utils.collectRoleSelections();
+  await utils.checActivityInMentorshipChannels();
 })
 
 // We will correlate this with recently added user
