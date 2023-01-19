@@ -92,12 +92,12 @@ const commands = [
             .setRequired(true))
         .addStringOption(option =>
           option.setName('category')
-            .setDescription('Mentorship category such as qa, se, security, data, mobil, security')
+            .setDescription('Mentorship category such as qa, se, security, data, mobile, devops, sf')
             .setRequired(true))
         .addStringOption(option =>
           option.setName('page')
             .setDescription('Link to Notion page created for the mentorship service')
-            .setRequired(true)))     
+            .setRequired(false)))     
     .addSubcommand(subcommand =>
       subcommand
         .setName('community-builder')
