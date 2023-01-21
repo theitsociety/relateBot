@@ -2,6 +2,7 @@ const config = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' 
 const Utils = require('./lib/utils');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const _ = require('lodash');
+const Enum = require('./lib/enum');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -71,7 +72,14 @@ client.on('messageCreate', async msg => {
     return;
   }
   if (!msg.author.bot || msg.author.username != 'relateBot') {
-    if (msg.channelId === config.channels.referralsChannel &&
+    const member = utils.members.get(msg.author.id);
+    if (member && msg.channelId == member['Onboarding Channel'] && 
+      _.includes([ Enum.Status.ASSIGNED, Enum.Status.COMMUNICATION_PENDING], member['Onboarding Status'])) {
+      await utils.updateProfile(member, { "Onboarding Status": Enum.Status.COMMUNICATED });
+      utils.logger(`Received message from ${member['Full Name']}. Updating onboarding status to **${Enum.Status.COMMUNICATED}**`, { logChannel: utils.config.channels.communityBuildersChannel });
+      return;
+    } 
+    else if (msg.channelId === config.channels.referralsChannel &&
       _.get(msg, 'embeds.0.title') == config.referrals.title) {
       try {
         // wait some time to make sure record created on data partner 
@@ -84,7 +92,8 @@ client.on('messageCreate', async msg => {
       } catch (e) {
         await msg.reply({ content: `Unable to invite: ${e}`});
       }
-    } else if (msg.channelId === config.channels.registrationChannel &&
+    } 
+    else if (msg.channelId === config.channels.registrationChannel &&
       _.get(msg, 'embeds.0.title') == config.registrations.title) {
         const email = utils.getValueFromEmbed(msg, 'email');
         await utils.finalizeReferral(email);
