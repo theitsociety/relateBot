@@ -76,7 +76,7 @@ client.on('messageCreate', async msg => {
     if (member && msg.channelId == member['Onboarding Channel'] && 
       _.includes([ Enum.Status.ASSIGNED, Enum.Status.COMMUNICATION_PENDING], member['Onboarding Status'])) {
       await utils.updateProfile(member, { "Onboarding Status": Enum.Status.COMMUNICATED });
-      utils.logger(`Received message from ${member['Full Name']}. Updating onboarding status to **${Enum.Status.COMMUNICATED}**`, { logChannel: utils.config.channels.communityBuildersChannel });
+      utils.logger(`Received message from **${member['Full Name']}** to <#${msg.channelId}> channel. Updating onboarding status to **${Enum.Status.COMMUNICATED}**`, { logChannel: utils.config.channels.communityBuildersChannel });
       return;
     } 
     else if (msg.channelId === config.channels.referralsChannel &&
