@@ -139,6 +139,7 @@
           "referrerAckEmail": "referrerAckEmail.html",
           "onboardingAssignmentEmail": "onboardingAssignmentEmail.html",
           "onboardingReminderEmail": "onboardingReminderEmail.html",
+          "onboardingSecondReminderEmail": "onboardingSecondReminderEmail.html",
           "mentorAssignmentEmail": "mentorAssignmentEmail.html"
         },
         "domain": "itsociety.org"
