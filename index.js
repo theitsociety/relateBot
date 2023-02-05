@@ -152,7 +152,7 @@ client.on('interactionCreate', async interaction => {
   let { commandName } = interaction;
 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: ["invite", "register", "skills", "assign"].includes(commandName) ? false : true });
+  await interaction.deferReply({ephemeral: ["invite", "register", "skills", "assign", "itsociety"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
@@ -291,6 +291,30 @@ client.on('interactionCreate', async interaction => {
       } else {
         await interaction.editReply(result.error);
       }
+    }
+    else if (commandName === 'itsociety') {
+      const resources = utils.generateEmbed("References", {
+        "Meeting room": "https://go.itsociety.org/meet",
+        "Onboarding Tutorial": "https://go.itsociety.org/onboarding",
+        "Resources and Documentation": "https://go.itsociety.org/resources",
+        "Technical Tracks": "https://go.itsociety.org/tech-tracks",
+        "Github": "https://github.com/theitsociety",
+        "Join IT Society": "https://www.itsociety.org/join",
+        "Invite to IT Society": "https://go.itsociety.org/invite",
+        "Donate": "https://www.itsociety.org/support-us",
+        "Contact Us": [
+          "**Focus Groups**: focus@itsociety.org",
+          "**Mentorship**: mentorship@itsociety.org",
+          "**Other**: info@itsociety.org"
+        ]
+      },false);
+      const commands =  utils.generateEmbed("Discord Commands", {  
+        "/myprofile": "Shows, redeems or creates your IT Society profile.\nOutput is only visible to you",
+        "/skills": "Shows strong skills of IT Society community"
+      }, false);
+      await interaction.editReply({ 
+        embeds: _.concat(resources.embeds, commands.embeds)
+      });
     }
 
   } catch (e) {

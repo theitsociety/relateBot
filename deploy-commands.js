@@ -72,6 +72,10 @@ const commands = [
     .setDescription('Correlates Discord members and registrations via server nickname'),
     
   new SlashCommandBuilder()
+    .setName('itsociety')
+    .setDescription('IT Society References'),
+    
+  new SlashCommandBuilder()
     .setName('skills')
     .setDescription('Show strong skills of IT Society members'),
 

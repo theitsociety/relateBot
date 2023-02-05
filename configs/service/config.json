@@ -6,6 +6,7 @@
   },
   "publicCommands": [
     "myprofile",
+    "itsociety",
     "skills"
   ],
   "channels": {
