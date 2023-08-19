@@ -135,6 +135,7 @@
           "welcomeEmail": "welcomeEmail.html",
           "landingEmail": "landingEmail.html",
           "reInviteEmail": "reInviteEmail.html",
+          "joinBackEmail": "joinBackEmail.html",
           "referralEmail": "referralEmail.html",
           "referralReminderEmail": "referralReminderEmail.html",
           "referrerAckEmail": "referrerAckEmail.html",
