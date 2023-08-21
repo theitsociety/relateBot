@@ -121,6 +121,16 @@ class GoogleClient extends BaseHelper {
     return this.sendMail(content);
   };
 
+  async sendInvite(options, type) {
+    const content = {
+      ...this.partnerConfig.email.defaults,
+      to: options.email,
+      subject: type == "joinBackInvite" ? 'Action Needed! 🙋‍♂️' : 'Welcome to IT Society! 🙋‍♂️',
+      html: type == "renewInvite" ? this.templates.reInviteEmail(options) : type == "joinBackInvite" ? this.templates.joinBackEmail(options) : this.templates.welcomeEmail(options),
+    };
+    return this.sendMail(content);
+  };
+
   async sendLandingEmail(options) {
     const content = {
       ...this.partnerConfig.email.defaults,
@@ -139,11 +149,32 @@ const partnerConfig = require('../../configs/service/config_prod.json').partnerC
 const main = async () => {
   
   const googleClient = new GoogleClient(partnerConfig);
-  return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
-  return  _.get(await googleClient.listGroup(), 'data.members');
-  return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
-  return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");
-  return await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
+  // return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
+  // return  _.get(await googleClient.listGroup(), 'data.members');
+  // return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
+  // return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");
+  // return await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
+  const allPromises = [];
+  const list = fs.readFileSync(path.join(__dirname, 'list.csv'),{ encoding: 'utf8', flag: 'r' }).split('\n');
+  let fields;
+  for (const line of list) {
+    // console.log(line);
+    if (!fields) {
+      fields = line.split(",").map(el => el.trim());
+    } else {
+      const values = line.split(",").map(el => el.trim());
+      const obj = {};
+      for (const ind in values) {
+        obj[ fields[ind] ] = values[ind];
+      }
+      console.log(obj);
+      await googleClient.sendInvite(obj, "joinBackInvite").then(messageId => {
+        console.log('Message sent successfully:', messageId)
+        return new Promise(resolve => setTimeout(resolve, 1000));
+      });
+    }
+  }
+  return list.length - 1;
 };
 
 main()
