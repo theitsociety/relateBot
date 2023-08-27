@@ -140,7 +140,19 @@ class GoogleClient extends BaseHelper {
     };
     return this.sendMail(content);
   };
+
+  async sendReferralInvite(options, renewInvite) {
+    const content = {
+      ...this.partnerConfig.email.defaults,
+      to: options.email,
+      subject: renewInvite ? 'IT Society: Reminder for the invite 🎗' : 'IT Society: You are invited!! 🫵',
+      html: renewInvite ? this.templates.referralReminderEmail(options) : this.templates.referralEmail(options),
+    };
+    return this.sendMail(content);
+  };
 }
+
+
 
 module.exports = GoogleClient;
 
@@ -149,11 +161,12 @@ const partnerConfig = require('../../configs/service/config_prod.json').partnerC
 const main = async () => {
   
   const googleClient = new GoogleClient(partnerConfig);
+  // return await googleClient.sendReferralInvite({ email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society" });
   // return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
   // return  _.get(await googleClient.listGroup(), 'data.members');
   // return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
   // return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");
-  // return await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
+  return await googleClient.sendInvite({ email: "turkoz@gmail.com", invite: "https://yahoo.com" });
   const allPromises = [];
   const list = fs.readFileSync(path.join(__dirname, 'list.csv'),{ encoding: 'utf8', flag: 'r' }).split('\n');
   let fields;
