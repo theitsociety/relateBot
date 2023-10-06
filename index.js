@@ -298,6 +298,7 @@ client.on('interactionCreate', async interaction => {
         "Onboarding Tutorial": "https://go.itsociety.org/onboarding",
         "Resources and Documentation": "https://go.itsociety.org/resources",
         "Technical Tracks": "https://go.itsociety.org/tech-tracks",
+        "Book a problem-solving office hour": "https://go.itsociety.org/problem-solving-office-hour",
         "Github": "https://github.com/theitsociety",
         "Join IT Society": "https://www.itsociety.org/join",
         "Invite to IT Society": "https://go.itsociety.org/invite",
