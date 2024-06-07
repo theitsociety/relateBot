@@ -83,7 +83,7 @@ client.on('messageCreate', async msg => {
       _.get(msg, 'embeds.0.title') == config.referrals.title) {
       try {
         // wait some time to make sure record created on data partner 
-        await wait(1000);
+        await wait(20000);
         const email = utils.getValueFromEmbed(msg, config.referrals.email);
         const result = await utils.inviteReferral(email, msg.id);
         if (result.error) {
