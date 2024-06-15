@@ -40,6 +40,7 @@
   },
   "mentorship": {
     "remindAfter": 2592000000,
+    "coordinatorRoles": [ "${{COORDINATOR_ROLE}}" ],
     "domains": {
       "qa": "QA / Test",
       "se": "Software Engineering",
@@ -95,8 +96,8 @@
       "request": {
         "baseURL": "https://api.notion.com/v1",
         "registationDatabase": "${{DATABASE_ID}}",
-        "referralDatabase": "${{DATABASE_ID}}",
         "skillDatabase": "${{DATABASE_ID}}",
+        "referralDatabase": "${{DATABASE_ID}}",
         "mentorshipDatabase": "${{DATABASE_ID}}",
         "headers": { 
           "Notion-Version": "2022-06-28",
@@ -117,7 +118,7 @@
           "http://localhost"
         ],
         "tokens": {
-          "note": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
+          "refresh_token": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
         }
       },
       "email": {
@@ -153,6 +154,7 @@
     "focus-group-coordinator": "focus-group-coordinator",
     "mentor": "mentor",
     "tutor": "tutor",
+    "community-builder": "community-builder",
     "🤳": "ios-thrive",
     "🤩": "qa-sdet",
     "🤠": "tech-talks",
@@ -163,12 +165,14 @@
     "👶": "practice-programming-beginner",
     "📏": "data-engineer",
     "🧡": "eng-management",
-    "🏋️‍♀️": "women-in-tech",
+    "👩‍🚀": "women-in-tech",
     "💻": "cplusplus-deep-dive",
-    "🧑🏻‍💻": "hands-on"
+    "🧑🏻‍💻": "hands-on",
+    "🎯": "staff-engineers-path",
+    "🤖": "ai-ml"
   },
   "startUpCorrelatation": false,
-  "syncPeriod": 300000,
   "syncPeriodActivityInMentorshipChannels": 86400000,
+  "syncPeriod": 300000,
   "token": "${{TOKEN}}"
 }
