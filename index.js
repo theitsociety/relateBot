@@ -142,17 +142,20 @@ client.on('messageReactionAdd', async (reaction, user) => {
   }
   if (reaction.message.channelId == config.channels.donationsChannel &&
     reaction.emoji.name == config.donations.receiptEmoji &&
-    reaction.message.content.startsWith("Payment Processed:")
+    reaction.message.content.startsWith("**New invoice is created**")
   ) {
-    const inputs = reaction.message.content.substring(19);
-    const inputsArr = inputs.split(',').map(e => e.trim());
+    const inputsArr = reaction.message.content.split('\n').map(e => {
+      const flds = e.split(':');
+      flds.shift();
+      return flds.join(':').trim();
+    }).filter(e => e);
     const inputsObj = {
       name: inputsArr[0],
       email: inputsArr[1],
       amount: inputsArr[2],
-      date: new Date(inputsArr[3]).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}),
-      invoiceNumber: inputsArr[4],
-      receiptLink: inputsArr[5]
+      date: new Date(inputsArr[3].replaceAll('-','.')).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}),
+      invoiceNumber: inputsArr[5],
+      receiptLink: inputsArr[6]
     }
     try {
       await utils.sendDonationReceipt(inputsObj);
