@@ -37,7 +37,8 @@
     "email": "Invitee Email"
   },
   "donations": {
-    "receiptEmoji": "🧾"
+    "receiptEmoji": "🧾",
+    "messagePrefix": "**New invoice is created**"
   },
   "onboarding": {
     "remindAfter": 172800000

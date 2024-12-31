@@ -142,7 +142,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
   }
   if (reaction.message.channelId == config.channels.donationsChannel &&
     reaction.emoji.name == config.donations.receiptEmoji &&
-    reaction.message.content.startsWith("**New invoice is created**")
+    reaction.message.content.startsWith(config.donations.messagePrefix)
   ) {
     const inputsArr = reaction.message.content.split('\n').map(e => {
       const flds = e.split(':');
