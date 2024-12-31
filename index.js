@@ -138,7 +138,31 @@ client.on('messageReactionAdd', async (reaction, user) => {
     } catch (e) {
       await reaction.message.reply({ content: `Unable to invite: ${e}`});
     }
+    return;
   }
+  if (reaction.message.channelId == config.channels.donationsChannel &&
+    reaction.emoji.name == config.donations.receiptEmoji &&
+    reaction.message.content.startsWith("Payment Processed:")
+  ) {
+    const inputs = reaction.message.content.substring(19);
+    const inputsArr = inputs.split(',').map(e => e.trim());
+    const inputsObj = {
+      name: inputsArr[0],
+      email: inputsArr[1],
+      amount: inputsArr[2],
+      date: new Date(inputsArr[3]).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}),
+      invoiceNumber: inputsArr[4],
+      receiptLink: inputsArr[5]
+    }
+    try {
+      await utils.sendDonationReceipt(inputsObj);
+      await reaction.message.reply({ content: `Donation receipt e-mail sent to ${inputsObj.name} <${inputsObj.email}>` });
+    } catch (e) {
+      await reaction.message.reply({ content: `Unable to send donation receipt: ${e}`});
+    }
+    return;
+  }
+
 });
 
 // All bot commands are handled here

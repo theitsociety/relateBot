@@ -150,6 +150,17 @@ class GoogleClient extends BaseHelper {
     };
     return this.sendMail(content);
   };
+
+  async sendDonationReceipt(options) {
+    const content = {
+      ...this.partnerConfig.email.defaults,
+      to: options.email,
+      subject: `IT Society: Donation Received for Invoice #${options.invoiceNumber} 🧾`,
+      html: this.templates.donationReceipt(options),
+    };
+    return this.sendMail(content);
+  };
+
 }
 
 
@@ -161,6 +172,7 @@ const partnerConfig = require('../../configs/service/config_prod.json').partnerC
 const main = async () => {
   
   const googleClient = new GoogleClient(partnerConfig);
+  return await googleClient.sendDonationReceipt({ name: "Tahsin Turkoz", email: "turkoz@gmail.com", invoiceNumber: "20022", date: "Sep 7, 2021", receiptLink: "https://link.waveapps.com/99ep6c-pd33p2", amount: "34.65" });
   // return await googleClient.sendReferralInvite({ email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society" });
   // return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
   // return  _.get(await googleClient.listGroup(), 'data.members');

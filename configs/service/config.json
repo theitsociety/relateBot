@@ -10,6 +10,7 @@
     "skills"
   ],
   "channels": {
+    "donationsChannel": "${{DONATIONS_CHANNEL_ID}}",
     "logChannel": "${{LOG_CHANNEL_ID}}",
     "welcomeChannel": "${{WELCOME_ROLE_ID}}",
     "roleSelectionChannel": "${{ROLE_SELECTION_CHANNEL_ID}}",
@@ -34,6 +35,9 @@
     "dormantEmoji": "💤",
     "remindAfter": 604800000,
     "email": "Invitee Email"
+  },
+  "donations": {
+    "receiptEmoji": "🧾"
   },
   "onboarding": {
     "remindAfter": 172800000
@@ -133,6 +137,7 @@
           "textEncoding": "base64"
         },
         "templates": {
+          "donationReceipt": "donationReceipt.html",
           "welcomeEmail": "welcomeEmail.html",
           "landingEmail": "landingEmail.html",
           "reInviteEmail": "reInviteEmail.html",
