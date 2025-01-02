@@ -144,22 +144,9 @@ client.on('messageReactionAdd', async (reaction, user) => {
     reaction.emoji.name == config.donations.receiptEmoji &&
     reaction.message.content.startsWith(config.donations.messagePrefix)
   ) {
-    const inputsArr = reaction.message.content.split('\n').map(e => {
-      const flds = e.split(':');
-      flds.shift();
-      return flds.join(':').trim();
-    }).filter(e => e);
-    const inputsObj = {
-      name: inputsArr[0],
-      email: inputsArr[1],
-      amount: inputsArr[2],
-      date: new Date(inputsArr[3].replaceAll('-','.')).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}),
-      invoiceNumber: inputsArr[5],
-      receiptLink: inputsArr[6]
-    }
     try {
-      await utils.sendDonationReceipt(inputsObj);
-      await reaction.message.reply({ content: `Donation receipt e-mail sent to ${inputsObj.name} <${inputsObj.email}>` });
+      const result = await utils.sendDonationReceipt(reaction.message.content);
+      await reaction.message.reply({ content: `Donation receipt e-mail sent to ${result.name} <${result.email}>` });
     } catch (e) {
       await reaction.message.reply({ content: `Unable to send donation receipt: ${e}`});
     }
