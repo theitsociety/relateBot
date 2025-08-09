@@ -22,10 +22,10 @@ jobs:
 
       - name: Reload relatebot server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -lc '
             cd relateBot/ &&
             git pull &&
             pm2 status &&
             pm2 reload 0 &&
             pm2 status
-          "
+          '"
