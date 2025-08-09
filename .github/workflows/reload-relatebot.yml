@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  
+  workflow_dispatch:  # allows manual trigger from Actions tab
 
 jobs:
   remote-ssh:
@@ -20,6 +20,12 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Run remote command
+      - name: Reload relatebot server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ls -la"
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd relatebot/ &&
+            git pull &&
+            pm2 status &&
+            pm2 reload 0 &&
+            pm2 status
+          "
