@@ -1,6 +1,6 @@
 apps:
   - name: relateBot-prod
-    script: "/Users/tyson.turkoz/.nvm/versions/node/v18.9.0/bin/npm"
+    script: "/home/turkoz/.nvm/versions/node/v18.9.0/bin/npm"
     args: 'run prod'
     max_restarts: 1
     min_uptime: 30000
