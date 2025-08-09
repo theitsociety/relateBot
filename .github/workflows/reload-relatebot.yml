@@ -20,12 +20,15 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Reload relatebot server
+      - name: Reload the relateBot server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -lc '
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            export NVM_DIR=\$HOME/.nvm && 
+            [ -s \"\$NVM_DIR/nvm.sh\" ] && 
+            . \"\$NVM_DIR/nvm.sh\" &&
             cd relateBot/ &&
             git pull &&
             pm2 status &&
             pm2 reload 0 &&
             pm2 status
-          '"
+          "
