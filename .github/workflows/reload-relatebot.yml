@@ -28,6 +28,7 @@ jobs:
             . \"\$NVM_DIR/nvm.sh\" &&
             cd relateBot/ &&
             git pull &&
+            pm2 update &&
             pm2 status &&
             pm2 reload 0 &&
             pm2 status
