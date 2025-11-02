@@ -178,7 +178,8 @@
     "💻": "cplusplus-deep-dive",
     "🧑🏻‍💻": "hands-on",
     "🎯": "staff-engineers-path",
-    "🤖": "ai-ml"
+    "🤖": "ai-ml",
+	"💡": "ai-engineering"
   },
   "startUpCorrelatation": false,
   "syncPeriodActivityInMentorshipChannels": 86400000,
