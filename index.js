@@ -1,29 +1,48 @@
-const config = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
-const roles = require('./configs/service/roles.json');
-config.roles = roles;
-const Utils = require('./lib/utils');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const _ = require('lodash');
 const Enum = require('./lib/enum');
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildInvites,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.DirectMessageReactions
-  ], 
-  partials: [
-    Partials.Message, 
-    Partials.Channel, 
-    Partials.Reaction
-  ],
-});
+const AzureKeyVaultHelper = require('./lib/azureKeyVault');
+const Utils = require('./lib/utils');
 
-const utils = new Utils(client, config);
+// Load config and secrets asynchronously
+(async () => {
+  let config = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
+  const roles = require('./configs/service/roles.json');
+  config.roles = roles;
+
+  // Load secrets from Azure Key Vault if configured
+  const keyVaultUrl = process.env.AZURE_KEY_VAULT_URL;
+  if (keyVaultUrl) {
+    try {
+      const secretMappings = require('./configs/service/secretMappings.json');
+      const keyVault = new AzureKeyVaultHelper(keyVaultUrl);
+      await keyVault.populateConfigFromSecrets(config, secretMappings);
+      console.log('Successfully loaded secrets from Azure Key Vault');
+    } catch (error) {
+      console.error('Failed to load secrets from Azure Key Vault:', error.message);
+      console.error('Falling back to local config file');
+    }
+  }
+
+  const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.DirectMessages,
+      GatewayIntentBits.MessageContent,
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildInvites,
+      GatewayIntentBits.GuildMessageReactions,
+      GatewayIntentBits.DirectMessageReactions
+    ], 
+    partials: [
+      Partials.Message, 
+      Partials.Channel, 
+      Partials.Reaction
+    ],
+  });
+
+  const utils = new Utils(client, config);
 // A pretty useful method to create a delay without blocking the whole script.
 const wait = require("timers/promises").setTimeout;
 
@@ -339,5 +358,6 @@ client.on('interactionCreate', async interaction => {
   }
 }); 
 
-// client.login logs the bot in and sets it up for use.
-client.login(config.token);
+  // client.login logs the bot in and sets it up for use.
+  client.login(config.token);
+})();
