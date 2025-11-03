@@ -1,0 +1,27 @@
+{
+  "all": "all",
+  "focus-group-coordinator": "focus-group-coordinator",
+  "mentor": "mentor",
+  "tutor": "tutor",
+  "community-builder": "community-builder",
+  "interns": "interns",
+  "intern-managers": "intern-managers",
+  "bootcamp": "bootcamp",
+  "🤳": "ios-thrive",
+  "🤩": "qa-sdet",
+  "🤠": "tech-talks",
+  "🤓": "system-design",
+  "😭": "leetcode-medium-hard",
+  "📖": "book-club",
+  "👽": "cyber-sec",
+  "👶": "practice-programming-beginner",
+  "📏": "data-engineer",
+  "🧡": "eng-management",
+  "👩‍🚀": "women-in-tech",
+  "💻": "cplusplus-deep-dive",
+  "🧑🏻‍💻": "hands-on",
+  "🎯": "staff-engineers-path",
+  "🤖": "ai-ml",
+  "💡": "ai-engineering"
+}
+
