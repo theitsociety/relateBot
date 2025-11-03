@@ -167,7 +167,7 @@ class GoogleClient extends BaseHelper {
 
 module.exports = GoogleClient;
 
-const partnerConfig = require('../../configs/service/config.json').partnerConfig.google;
+const partnerConfig = require('../../configs/service/config_prod.json').partnerConfig.google;
 
 const main = async () => {
   
