@@ -1,14 +1,63 @@
 {
+  "platform": {
+    "name": "${{PLATFORM_NAME}}",
+    "icon": "${{ICON_URL}}",
+    "affiliate_icons": [
+      "${{AFFILIATE_ICON_1}}",
+      "${{AFFILIATE_ICON_2}}"
+    ],
+    "url": "${{WEBSITE_URL}}",
+    "intro": "quick intro about the organization in HTML format",
+    "details": "detailed intro about the organization in HTML format",
+    "address": {
+      "line1": "${{LINE1}}",
+      "line2": "${{LINE2}}",
+      "city": "${{CITY}}",
+      "state": "${{STATE}}",
+      "postalCode": "${{{POSTAL_CODE}}"
+    },
+    "social": {
+      "linkedin": {
+        "icon": "${{ICON_URL}}",
+        "url": "${{URL}}"
+      },
+      "web": {
+        "icon": "${{ICON_URL}}",
+        "url": "${{URL}}"
+      },
+      "x": {
+        "icon": "${{ICON_URL}}",
+        "url": "${{URL}}"
+      }
+    }
+  },
+  "references": {
+    "any links": "${{URL}}",
+    "to be shared with users": "${{URL}}",
+    "Supports List as well": [
+      "**Attribute1**: value1",
+      "**Attribute2**: value2"
+    ]
+  },
   "allowedRoles": {
     "admin": "${{ADMIN_ROLE_ID}}",
     "community-builder": "${{COMMUNITY-BUILDER}}",
     "mentor-relations": "{{MENTOR-RELATIONS}}"
   },
-  "publicCommands": [
-    "myprofile",
-    "itsociety",
-    "skills"
-  ],
+  "publicCommands": {
+    "myprofile": "Shows, redeems or creates your profile.",
+    "skills": "Strong skills of platform members",
+    "references": "Platform references and list of useful relatebot comments"
+  },
+  "privateCommands": {
+    "info": "Return all available info about a Discord user",
+    "register": "Register a new user by skipping registration form",
+    "invite": "Creates Discord Server invite for an already registered email",
+    "correlate": "Correlates Discord members and registrations via Discord nicknames",
+    "emails": "Returns email list for a role",
+    "assign community-builder": "Assign a community builder to a new platform member",
+    "assign mentor": "Assign a mentor to mentee requesting mentorship service"
+  },
   "channels": {
     "donationsChannel": "${{DONATIONS_CHANNEL_ID}}",
     "logChannel": "${{LOG_CHANNEL_ID}}",
@@ -25,7 +74,10 @@
     "title": "New Registration",
     "inviteEmoji": "📧",
     "remindAfter": 604800000,
-    "email": [ "email", "Email Address" ]
+    "email": [
+      "email",
+      "Email Address"
+    ]
   },
   "referrals": {
     "title": "New Invitation",
@@ -45,8 +97,15 @@
   },
   "mentorship": {
     "remindAfter": 2592000000,
-    "coordinatorRoles": [ "${{COORDINATOR_ROLE}}" ],
+    "coordinatorRoles": [
+      "${{COORDINATOR_ROLE}}"
+    ],
+    "voiceChannels": [
+      "#mentor-room-1",
+      "#mentor-room-2"
+    ],
     "domains": {
+      "abb": "Any domain mentorship service provided and abbreviation used in channel names along with mentee name",
       "qa": "QA / Test",
       "se": "Software Engineering",
       "security": "Security",
@@ -59,7 +118,7 @@
   "clientId": "${{CLIENT_ID}}",
   "dataPartner": "notion",
   "emailPartner": "google",
-	"guildId": "${{GUILD_ID}}",
+  "guildId": "${{GUILD_ID}}",
   "logging": {
     "console": true,
     "discord": true
@@ -75,16 +134,6 @@
         "Status": "Status",
         "Discord Form ID": "messageId"
       },
-      "richTextKeys": [
-        "Discord Nickname",
-        "Discord Id",
-        "Discord Tag",
-        "Discord Invite",
-        "Company",
-        "Job Title",
-        "Onboarding Channel",
-        "Discord Form ID"
-      ],
       "optionMappings": {
         "title": "Job Title",
         "company": "Company",
@@ -98,17 +147,59 @@
         "Data Technologies",
         "Cloud Technologies"
       ],
+      "keyTypes": {
+        "richTextKeys": [
+          "Discord Nickname",
+          "Discord Id",
+          "Discord Tag",
+          "Discord Invite",
+          "Company",
+          "Job Title",
+          "Onboarding Channel",
+          "Discord Form ID"
+        ],
+        "multiSelectKeys": [
+          "Communication Preferences",
+          "Groups"
+        ],
+        "selectKeys": [
+          "Status",
+          "Onboarding Status",
+          "Domain",
+          "Gender"
+        ],
+        "relationKeys": [
+          "Assigned Community Builder",
+          "Mentor"
+        ],
+        "emailKeys": [
+          "Email Address"
+        ],
+        "urlKeys": [
+          "URL"
+        ],
+        "checkboxKeys": [
+          "Onboarding Communication Reminded"
+        ],
+        "titleKeys": [
+          "Full Name",
+          "Name"
+        ],
+        "dateKeys": [
+          "Mentor Assignment Date"
+        ]
+      },
       "request": {
         "baseURL": "https://api.notion.com/v1",
         "registationDatabase": "${{DATABASE_ID}}",
         "skillDatabase": "${{DATABASE_ID}}",
         "referralDatabase": "${{DATABASE_ID}}",
         "mentorshipDatabase": "${{DATABASE_ID}}",
-        "headers": { 
+        "headers": {
           "Notion-Version": "2022-06-28",
           "Authorization": "Bearer ${{SECRET}}",
           "Content-Type": "application/json"
-        } 
+        }
       }
     },
     "google": {
@@ -123,21 +214,28 @@
           "http://localhost"
         ],
         "tokens": {
-          "refresh_token": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put JSON here"
+          "refresh_token": "Generate with generateTokenWithOneTimeUseGoogleCode.js and put here"
         }
       },
       "email": {
         "defaults": {
-          "replyTo": "info@itsociety.org",
-          "from": "IT Society<info@itsociety.org>",
+          "replyTo": "info${{domain.name}}",
+          "from": "Organization<info${{domain.name}}>",
           "headers": [
-            { "key": "X-Application-Developer", "value": "Tyson Turkoz" },
-            { "key": "X-Application-Version", "value": "v1.0.0" }
+            {
+              "key": "X-Application-Developer",
+              "value": "Tyson Turkoz"
+            },
+            {
+              "key": "X-Application-Version",
+              "value": "v1.0.0"
+            }
           ],
-          "text": "This email is sent by IT Society Discord Server",
+          "text": "This email is sent by ${{PLATFORM_NAME}}",
           "textEncoding": "base64"
         },
         "templates": {
+          "footer": "footer.html",
           "donationReceipt": "donationReceipt.html",
           "welcomeEmail": "welcomeEmail.html",
           "landingEmail": "landingEmail.html",
@@ -151,9 +249,37 @@
           "onboardingSecondReminderEmail": "onboardingSecondReminderEmail.html",
           "mentorAssignmentEmail": "mentorAssignmentEmail.html"
         },
-        "domain": "itsociety.org"
+        "enableEmailGroups": true,
+        "domain": "${{domain.name}}"
       }
     }
+  },
+  "roles": {
+    "group": "any Discord group created for commmunity members. Use an emaji as the attribute if members are allowed to select this group on Discord Server by using corresponding emoji",
+    "all": "all",
+    "focus-group-coordinator": "focus-group-coordinator",
+    "mentor": "mentor",
+    "tutor": "tutor",
+    "community-builder": "community-builder",
+    "interns": "interns",
+    "intern-managers": "intern-managers",
+    "bootcamp": "bootcamp",
+    "🤳": "ios-thrive",
+    "🤩": "qa-sdet",
+    "🤠": "tech-talks",
+    "🤓": "system-design",
+    "😭": "leetcode-medium-hard",
+    "📖": "book-club",
+    "👽": "cyber-sec",
+    "👶": "practice-programming-beginner",
+    "📏": "data-engineer",
+    "🧡": "eng-management",
+    "👩‍🚀": "women-in-tech",
+    "💻": "cplusplus-deep-dive",
+    "🧑🏻‍💻": "hands-on",
+    "🎯": "staff-engineers-path",
+    "🤖": "ai-ml",
+    "💡": "ai-engineering"
   },
   "startUpCorrelatation": false,
   "syncPeriodActivityInMentorshipChannels": 86400000,

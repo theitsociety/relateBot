@@ -1,50 +1,63 @@
 const { SlashCommandBuilder, Routes } = require('discord.js');
+const _ = require('lodash');
 const { REST } = require('@discordjs/rest');
-const { clientId, guildId, token } = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
+const { clientId, guildId, token, publicCommands, privateCommands, mentorship, partnerConfig } = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
 
-const commands = [
-  new SlashCommandBuilder()
+const commands = [];
+const enabledCommands = { ... publicCommands, ...privateCommands };
+
+if (_.keys(enabledCommands).includes('register')) {
+  const optionMappings = _.get(partnerConfig, `notion.optionMappings`);
+  const command = new SlashCommandBuilder()
     .setName('register')
-    .setDescription('Registers a user!')
+    .setDescription(enabledCommands['register'])
+  // required fields
+  command
     .addStringOption(option =>
       option.setName('email')
-        .setDescription('User email')
+        .setDescription(optionMappings['email'])
         .setRequired(true))
     .addStringOption(option =>
       option.setName('name')
-        .setDescription('Full Name')
-        .setRequired(true))
-    .addStringOption(option =>
-      option.setName('company')
-        .setDescription('Company')
-        .setRequired(false))
-    .addStringOption(option =>
-      option.setName('title')
-        .setDescription('Job Title')
-        .setRequired(false)),
+        .setDescription(optionMappings['name'])
+        .setRequired(true));
+  // Optional fields
+  for ( option in  _.omit(optionMappings, ["email", "name" ])) {
+    command.addStringOption(o =>
+      o.setName(option)
+        .setDescription(optionMappings[option])
+        .setRequired(false));
+  }
+  commands.push(command);
+}
 
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('invite')) {
+  commands.push(new SlashCommandBuilder()
     .setName('invite')
-    .setDescription('Creates Discord invite for an email address!')
+    .setDescription(enabledCommands['invite'])
     .addStringOption(option =>
       option.setName('email')
         .setDescription('User email')
-        .setRequired(true)),
+        .setRequired(true)));
+}
 
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('info')) {
+  commands.push(new SlashCommandBuilder()
     .setName('info')
-    .setDescription('Returns all available info about user')
+    .setDescription(enabledCommands['info'])
     .addUserOption(option =>
       option.setName('user')
         .setDescription('The user')
-        .setRequired(true)),
+        .setRequired(true)));
+}
   
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('myprofile')) {
+  commands.push(new SlashCommandBuilder()
     .setName('myprofile')
-    .setDescription('Shows, redeems or creates your IT Society profile')
+    .setDescription(enabledCommands['myprofile'])
     .addStringOption(option =>
       option.setName('email')
-        .setDescription('Used only to redeem or create IT Society profile')
+        .setDescription('Used only to redeem or create platform profile')
         .setRequired(false))
     .addStringOption(option =>
       option.setName('name')
@@ -57,35 +70,47 @@ const commands = [
     .addStringOption(option =>
       option.setName('title')
         .setDescription('Job Title')
-        .setRequired(false)),
+        .setRequired(false)));
+}
 
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('emails')) {
+  commands.push(new SlashCommandBuilder()
     .setName('emails')
-    .setDescription('Returns email list for a role')
+    .setDescription(enabledCommands['emails'])
     .addRoleOption(option =>
       option.setName('role')
         .setDescription('The role')
-        .setRequired(false)),
+        .setRequired(false)));
+}
 
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('correlate')) {
+  commands.push(new SlashCommandBuilder()
     .setName('correlate')
-    .setDescription('Correlates Discord members and registrations via server nickname'),
+    .setDescription(enabledCommands['correlate']));
+}
     
-  new SlashCommandBuilder()
-    .setName('itsociety')
-    .setDescription('IT Society References'),
+if (_.keys(enabledCommands).includes('references')) {
+  commands.push(new SlashCommandBuilder()
+    .setName('references')
+    .setDescription(enabledCommands['references']));
+}
     
-  new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('skills')) {
+  commands.push(new SlashCommandBuilder()
     .setName('skills')
-    .setDescription('Show strong skills of IT Society members'),
+    .setDescription(enabledCommands['skills']));
+}
 
-  new SlashCommandBuilder()
+if (_.some(_.keys(enabledCommands), ec => ec.startsWith('assign'))) {
+  const newCommmand = new SlashCommandBuilder()
     .setName('assign')
-    .setDescription('Assign a member to community builder / mentor')
-    .addSubcommand(subcommand =>
+    .setDescription("One-on-one assignments");
+    
+  if (_.keys(enabledCommands).includes('assign mentor')) {
+    newCommmand.addSubcommand(subcommand =>
       subcommand
         .setName('mentor')
-        .setDescription('Assign a mentor')
+        .setDescription(enabledCommands['assign mentor'])
         .addUserOption(option =>
           option.setName('mentee')
             .setDescription('Mentee user')
@@ -96,16 +121,18 @@ const commands = [
             .setRequired(true))
         .addStringOption(option =>
           option.setName('category')
-            .setDescription('Mentorship category such as qa, se, security, data, mobile, devops, sf')
+            .setDescription(`Mentorship category such as ${_.keys(mentorship.domains).slice(0, 13).join(', ')}`)
             .setRequired(true))
         .addStringOption(option =>
           option.setName('page')
-            .setDescription('Link to Notion page created for the mentorship service')
-            .setRequired(false)))     
-    .addSubcommand(subcommand =>
+            .setDescription('Link to the page created for this mentorship service')
+            .setRequired(false)));
+  }
+  if (_.keys(enabledCommands).includes('assign community-builder')) {
+    newCommmand.addSubcommand(subcommand =>
       subcommand
         .setName('community-builder')
-        .setDescription('Assign a community-builder')
+        .setDescription(enabledCommands['assign community-builder'])
         .addStringOption(option =>
           option.setName('email')
             .setDescription('The member\'s email to be assigned')
@@ -113,12 +140,15 @@ const commands = [
         .addUserOption(option =>
           option.setName('user')
             .setDescription('Community Builder user')
-            .setRequired(true))) 
+            .setRequired(true)));
+  }
+  commands.push(newCommmand);
+} 
 
-].map(command => command.toJSON());
+const body = commands.map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(token);
 
-rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+rest.put(Routes.applicationGuildCommands(clientId, guildId), { body })
 	.then((data) => console.log(`Successfully registered ${data.length} application commands.`))
 	.catch(console.error);

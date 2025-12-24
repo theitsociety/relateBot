@@ -111,55 +111,56 @@ class GoogleClient extends BaseHelper {
     return id;
   };
 
-  async sendInvite(options) {
+  async sendEmailWithTemplate(template, options) {
     const content = {
       ...this.partnerConfig.email.defaults,
       to: options.email,
-      subject: 'Welcome to IT Society! 🙋‍♂️',
-      html: this.templates.welcomeEmail(options),
+      subject:`${this.config.platform.name}: `
     };
-    return this.sendMail(content);
-  };
+    const footerOptions = {
+      disclaimer: ""
+    };
+    _.extend(options, _.pick(this.config, ['channels', 'references', 'platform']));
+    // Customize this block for each template
+    if (template == "donationReceipt") {
+    footerOptions.disclaimer =  `You are receiving this email because you donated to ${this.config.platform.name}`;
+    content.subject += `Donation Received for Invoice #${options.invoiceNumber} 🧾`;
+    } else if (template == "landingEmail") {
+      footerOptions.disclaimer = "You are receiving this email because you opted in via registration form.";
+      content.subject += `Welcome to Discord Server 👋`;
+    } else if (template == "referralEmail") {
+      if (options.renewInvite) {
+        content.subject += `Reminder for the invite 🎗`
+        template = "referralReminderEmail";
+      } else {
+        content.subject += `You are invited!! 🫵`;
+      }
+    } else if (template == 'welcomeEmail') {
+      if (options.type == 'joinBackInvite') {
+        content.subject += 'Action Needed! ⚠️';
+        template = "joinBackEmail";
+      } else {
+        content.subject += `Welcome! 🤗`;
+        if (options.type == 'renewInvite') {
+          template = "reInviteEmail";
+        }
+      }
+    } else if (template == 'referrerAckEmail') {
+      content.subject += `Invitation accepted ✔️`;
+    } else if (template == 'mentorAssignmentEmail') {
+      content.subject += `You have a mentor 👨‍🏫`;
+    } else if (template == 'onboardingAssignmentEmail') {
+      content.subject += `We got your back 👍`;
+    } else if (template == 'onboardingReminderEmail') {
+      content.subject += `Reach out to the assigned member ✔️`;
+    } else if (template == 'onboardingSecondReminderEmail') {
+      content.subject += `Follow up with the assigned member ✔️`;
+    }
 
-  async sendInvite(options, type) {
-    const content = {
-      ...this.partnerConfig.email.defaults,
-      to: options.email,
-      subject: type == "joinBackInvite" ? 'Action Needed! 🙋‍♂️' : 'Welcome to IT Society! 🙋‍♂️',
-      html: type == "renewInvite" ? this.templates.reInviteEmail(options) : type == "joinBackInvite" ? this.templates.joinBackEmail(options) : this.templates.welcomeEmail(options),
-    };
+    options.footer = this.templates.footer({ ...this.config.platform, footerOptions });
+    content.html = this.templates[template](options);
     return this.sendMail(content);
-  };
-
-  async sendLandingEmail(options) {
-    const content = {
-      ...this.partnerConfig.email.defaults,
-      to: options.email,
-      subject: 'IT Society > Welcome to Discord Server 👋',
-      html: this.templates.landingEmail(options),
-    };
-    return this.sendMail(content);
-  };
-
-  async sendReferralInvite(options, renewInvite) {
-    const content = {
-      ...this.partnerConfig.email.defaults,
-      to: options.email,
-      subject: renewInvite ? 'IT Society: Reminder for the invite 🎗' : 'IT Society: You are invited!! 🫵',
-      html: renewInvite ? this.templates.referralReminderEmail(options) : this.templates.referralEmail(options),
-    };
-    return this.sendMail(content);
-  };
-
-  async sendDonationReceipt(options) {
-    const content = {
-      ...this.partnerConfig.email.defaults,
-      to: options.email,
-      subject: `IT Society: Donation Received for Invoice #${options.invoiceNumber} 🧾`,
-      html: this.templates.donationReceipt(options),
-    };
-    return this.sendMail(content);
-  };
+  }
 
 }
 
@@ -167,14 +168,23 @@ class GoogleClient extends BaseHelper {
 
 module.exports = GoogleClient;
 
-const partnerConfig = require('../../configs/service/config.json').partnerConfig.google;
+const serviceConfig = require('../../configs/service/config_nyp.json');
 
 const main = async () => {
   
-  const googleClient = new GoogleClient(partnerConfig);
-  return await googleClient.sendDonationReceipt({ name: "Tahsin Turkoz", email: "turkoz@gmail.com", invoiceNumber: "20022", date: "Sep 7, 2021", receiptLink: "https://link.waveapps.com/99ep6c-pd33p2", amount: "34.65" });
-  // return await googleClient.sendReferralInvite({ email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society" });
-  // return await googleClient.sendLandingEmail({ email: "turkoz@gmail.com" });
+  const googleClient = new GoogleClient(serviceConfig.partnerConfig.google, serviceConfig);
+  // return await googleClient.sendEmailWithTemplate('donationReceipt', { name: "Tahsin Turkoz", email: "turkoz@gmail.com", invoiceNumber: "20022", date: "Sep 7, 2021", receiptLink: "https://link.waveapps.com/99ep6c-pd33p2", amount: "34.65" });
+  // return await googleClient.sendEmailWithTemplate("landingEmail", { email: "turkoz@gmail.com" });
+  // return await googleClient.sendEmailWithTemplate("referralEmail", { email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society" });
+  // return await googleClient.sendEmailWithTemplate("referralEmail", { email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society", renewInvite: true });
+  // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com"});
+  // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com", type: 'renewInvite'});
+  // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com", type: 'joinBackInvite'});
+  // return await googleClient.sendEmailWithTemplate("referrerAckEmail", { email: "turkoz@gmail.com", referral: "Jane Doe" });
+  // return await googleClient.sendEmailWithTemplate("mentorAssignmentEmail", { email: "turkoz@gmail.com", mentor: "Tyson Turkoz", mentee: "John Doe", channel: "se-john-doe" });
+  // return await googleClient.sendEmailWithTemplate("onboardingAssignmentEmail", { email: "turkoz@gmail.com", communityBuilder: "Tyson Turkoz", member: "John Doe"});
+  // return await googleClient.sendEmailWithTemplate("onboardingReminderEmail", { email: "turkoz@gmail.com", communityBuilder: "Tyson Turkoz", member: "John Doe"});
+  return await googleClient.sendEmailWithTemplate("onboardingSecondReminderEmail", { email: "turkoz@gmail.com", communityBuilder: "Tyson Turkoz", member: "John Doe"});
   // return  _.get(await googleClient.listGroup(), 'data.members');
   // return await googleClient.deleteMemberFromGroups("all@itsociety.org", "tysonturkoz1977@gmail.com");
   // return await googleClient.addMemberToGroups("all@itsociety.org", "tysonturkoz1977@gmail.com", "TT");

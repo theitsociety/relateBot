@@ -1,3 +1,4 @@
-config_prod.json
-config_dev.json
+configs/pm2/*
+config_*.json
 node_modules
+.DS_Store

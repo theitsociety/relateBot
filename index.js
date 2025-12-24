@@ -1,6 +1,4 @@
 const config = require(`./configs/service/config${process.env['NODE_ENV'] ? '_' + process.env['NODE_ENV'] : ''}.json`);
-const roles = require('./configs/service/roles.json');
-config.roles = roles;
 const Utils = require('./lib/utils');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const _ = require('lodash');
@@ -30,17 +28,15 @@ const wait = require("timers/promises").setTimeout;
 // Sync member data when the bot is ready, bind to the role reactions
 client.on('ready', async () => {
   utils.logger(`Logged in as ${client.user.tag}!`, { consoleOnly: true});
+  utils.logger(`Relatebot has wired in...`);
   const guild = client.guilds.cache.get(config.guildId);
+  await wait(3000);  
   await guild.members.fetch();
 
-  if (config.startUpCorrelatation) {
-    await utils.correlateDiscordWithPartner();
-    // to make sure Partner has updated data
-    await wait(1000);  
-  }
-  await utils.synMemberData();
+  await utils.correlateDiscordWithPartner(guild);
+  await utils.synMemberData(guild);
   await utils.collectRoleSelections();
-  await utils.checActivityInMentorshipChannels();
+  await utils.checActivityInMentorshipChannels(guild);
 })
 
 // We will correlate this with recently added user
@@ -168,14 +164,14 @@ client.on('interactionCreate', async interaction => {
   let { commandName } = interaction;
 
   // deferReply & editReply prevents crashes and timeouts
-  await interaction.deferReply({ephemeral: ["invite", "register", "skills", "assign", "itsociety"].includes(commandName) ? false : true });
+  await interaction.deferReply({ephemeral: ["invite", "register", "skills", "assign", "references"].includes(commandName) ? false : true });
 
   try {
     const user = await interaction.guild.members.fetch(interaction.user.id);
     const nickname = utils.getNickname(user);
 
     // Only Admins can use private commands
-    if ( !config.publicCommands.includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
+    if ( !_.keys(_.get(config, "publicCommands", {})).includes(commandName) && !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ) {
       utils.logger(`**${nickname}** does not have permission to execute command **${commandName}**`);
       interaction.editReply({ content: `You don't have permission`, ephemeral: true });
       return;
@@ -308,27 +304,14 @@ client.on('interactionCreate', async interaction => {
         await interaction.editReply(result.error);
       }
     }
-    else if (commandName === 'itsociety') {
-      const resources = utils.generateEmbed("References", {
-        "Meeting room": "https://go.itsociety.org/meet",
-        "Onboarding Tutorial": "https://go.itsociety.org/onboarding",
-        "Resources and Documentation": "https://go.itsociety.org/resources",
-        "Technical Tracks": "https://go.itsociety.org/tech-tracks",
-        "Book a problem-solving office hour": "https://go.itsociety.org/problem-solving-office-hour",
-        "Github": "https://github.com/theitsociety",
-        "Join IT Society": "https://www.itsociety.org/join",
-        "Invite to IT Society": "https://go.itsociety.org/invite",
-        "Donate": "https://www.itsociety.org/support-us",
-        "Contact Us": [
-          "**Focus Groups**: focus@itsociety.org",
-          "**Mentorship**: mentorship@itsociety.org",
-          "**Other**: info@itsociety.org"
-        ]
-      },false);
-      const commands =  utils.generateEmbed("Discord Commands", {  
-        "/myprofile": "Shows, redeems or creates your IT Society profile.\nOutput is only visible to you",
-        "/skills": "Shows strong skills of IT Society community"
-      }, false);
+    else if (commandName === 'references') {
+      const resources = utils.generateEmbed("References", config.references, false);
+      const commandDescriptions = !user.roles.cache.find(role => Object.values(config.allowedRoles).includes(role.id)) ?
+        config.publicCommands :
+        { ...config.publicCommands, ...config.privateCommands }; 
+      const commands =  utils.generateEmbed("Discord Commands", Object.fromEntries(
+        Object.entries(commandDescriptions).map(([key, value]) => ["/"+ key, value])
+      ), false);
       await interaction.editReply({ 
         embeds: _.concat(resources.embeds, commands.embeds)
       });
