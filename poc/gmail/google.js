@@ -168,7 +168,7 @@ class GoogleClient extends BaseHelper {
 
 module.exports = GoogleClient;
 
-const serviceConfig = require('../../configs/service/config_nyp.json');
+const serviceConfig = require('../../configs/service/config_prod.json');
 
 const main = async () => {
   
@@ -177,10 +177,10 @@ const main = async () => {
   // return await googleClient.sendEmailWithTemplate("landingEmail", { email: "turkoz@gmail.com" });
   // return await googleClient.sendEmailWithTemplate("referralEmail", { email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society" });
   // return await googleClient.sendEmailWithTemplate("referralEmail", { email: "turkoz@gmail.com", referral: "Jane Doe", referrer: "John Doe", notes: "Nice community to give back to society", renewInvite: true });
+  // return await googleClient.sendEmailWithTemplate("referrerAckEmail", { email: "turkoz@gmail.com", referral: "Jane Doe" });
   // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com"});
   // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com", type: 'renewInvite'});
   // return await googleClient.sendEmailWithTemplate("welcomeEmail", { email: "turkoz@gmail.com", invite: "https://www.google.com", type: 'joinBackInvite'});
-  // return await googleClient.sendEmailWithTemplate("referrerAckEmail", { email: "turkoz@gmail.com", referral: "Jane Doe" });
   // return await googleClient.sendEmailWithTemplate("mentorAssignmentEmail", { email: "turkoz@gmail.com", mentor: "Tyson Turkoz", mentee: "John Doe", channel: "se-john-doe" });
   // return await googleClient.sendEmailWithTemplate("onboardingAssignmentEmail", { email: "turkoz@gmail.com", communityBuilder: "Tyson Turkoz", member: "John Doe"});
   // return await googleClient.sendEmailWithTemplate("onboardingReminderEmail", { email: "turkoz@gmail.com", communityBuilder: "Tyson Turkoz", member: "John Doe"});
