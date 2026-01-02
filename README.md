@@ -75,6 +75,29 @@ Update config file to point correct npm path
 ### Google / Email
 - Generate OAuth credentials and a refresh token if you want to use the email templates or send messages via Gmail API. Use the helper `poc/gmail/generateTokenWithOneTimeUseGoogleCode.js` to obtain a refresh token interactively and store it in `partnerConfig.google.credentials.tokens.refresh_token`.
 
+#### Generate Google refresh token (quick steps)
+1. Ensure your `configs/service/config.json` has `partnerConfig.google.credentials.client_id`, `client_secret` and a redirect URI (e.g. `http://localhost`).
+2. Install dependencies (from repository root):
+
+```bash
+npm install
+```
+
+3. Run the helper script to generate tokens interactively:
+
+```bash
+node ./poc/gmail/generateTokenWithOneTimeUseGoogleCode.js
+```
+
+4. Follow the printed URL in your browser, authorize the app, then paste the redirected URL back into the terminal when prompted.
+5. The script will print JSON including `refresh_token`. Copy the `refresh_token` value and paste it into `configs/service/config.json` at:
+
+```json
+partnerConfig.google.credentials.tokens.refresh_token
+```
+
+6. Important: do NOT commit secrets to source control. Keep the config file locally or use deployment-time secrets.
+
 ## Configuration reference (quick)
 - `configs/service/config.json` contains all keys used by the bot. Look at `partnerConfig.notion.keymappings` and `partnerConfig.notion.keyTypes` to adapt the mapping between Notion and bot data models.
 
