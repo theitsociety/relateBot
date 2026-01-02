@@ -5,9 +5,9 @@ const { clientId, guildId, token, publicCommands, privateCommands, mentorship, p
 
 const commands = [];
 const enabledCommands = { ... publicCommands, ...privateCommands };
+const optionMappings = _.get(partnerConfig, `notion.optionMappings`);
 
 if (_.keys(enabledCommands).includes('register')) {
-  const optionMappings = _.get(partnerConfig, `notion.optionMappings`);
   const command = new SlashCommandBuilder()
     .setName('register')
     .setDescription(enabledCommands['register'])
@@ -51,26 +51,22 @@ if (_.keys(enabledCommands).includes('info')) {
         .setRequired(true)));
 }
   
-if (_.keys(enabledCommands).includes('myprofile')) {
-  commands.push(new SlashCommandBuilder()
+if (_.keys(enabledCommands).includes('myprofile')) { 
+  const command = new SlashCommandBuilder()
     .setName('myprofile')
     .setDescription(enabledCommands['myprofile'])
     .addStringOption(option =>
       option.setName('email')
         .setDescription('Used only to redeem or create platform profile')
-        .setRequired(false))
-    .addStringOption(option =>
-      option.setName('name')
-        .setDescription('Full Name')
-        .setRequired(false))
-    .addStringOption(option =>
-      option.setName('company')
-        .setDescription('Company')
-        .setRequired(false))
-    .addStringOption(option =>
-      option.setName('title')
-        .setDescription('Job Title')
-        .setRequired(false)));
+        .setRequired(false));
+  // Editable fields
+  for ( option in  _.omit(optionMappings, [ "email" ])) {
+    command.addStringOption(o =>
+      o.setName(option)
+        .setDescription(optionMappings[option])
+        .setRequired(false));
+  }  
+  commands.push(command);
 }
 
 if (_.keys(enabledCommands).includes('emails')) {
