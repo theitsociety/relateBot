@@ -98,6 +98,47 @@ partnerConfig.google.credentials.tokens.refresh_token
 
 6. Important: do NOT commit secrets to source control. Keep the config file locally or use deployment-time secrets.
 
+#### Send test emails with templates
+1. Open `poc/gmail/google.js` — there are several commented example calls near the bottom of the file demonstrating `sendEmailWithTemplate(templateName, options)` usage (e.g. `donationReceipt`, `landingEmail`, `referralEmail`, `welcomeEmail`, `mentorAssignmentEmail`, `onboardingReminderEmail`, etc.).
+2. Make sure your `configs/service/config_prod.json` (or `config_dev.json`) has a valid `partnerConfig.google.credentials.tokens.refresh_token` and `partnerConfig.google.credentials.client_id`/`client_secret`.
+3. Uncomment or add the template call you want to test and adjust its `options` object (examples below). Each template expects different data — see the commented examples in `poc/gmail/google.js` for common fields.
+
+Example calls you can copy into `poc/gmail/google.js`:
+
+```js
+// donation receipt
+await googleClient.sendEmailWithTemplate('donationReceipt', {
+	name: 'Jane Doe',
+	email: 'jane@example.com',
+	invoiceNumber: '20022',
+	date: 'Jan 1, 2026',
+	receiptLink: 'https://example.com/receipt.pdf',
+	amount: '34.65'
+});
+
+// landing/welcome
+await googleClient.sendEmailWithTemplate('landingEmail', { email: 'jane@example.com' });
+
+// referral
+await googleClient.sendEmailWithTemplate('referralEmail', { email: 'jane@example.com', referral: 'Jane Doe', referrer: 'John Doe', notes: 'Thanks for joining!' });
+
+// onboarding reminder
+await googleClient.sendEmailWithTemplate('onboardingReminderEmail', { email: 'jane@example.com', communityBuilder: 'Tyson Turkoz', member: 'Jane Doe' });
+```
+
+4. Run the script from the repository root:
+
+```bash
+node ./poc/gmail/google.js
+```
+
+5. The script will send the email using Gmail API and print the message id on success. Check the recipient inbox and the API response for errors.
+
+Notes
+- Templates are stored in `data/templates/` and mapped in your `configs/service/config*.json` under `partnerConfig.google.email.templates`.
+- The helper uses `partnerConfig.google.credentials.tokens.refresh_token` to obtain access tokens and will fail if that token is missing or revoked.
+- Keep test emails considerate (use your own mailbox or test accounts) to avoid spamming real users.
+
 ## Configuration reference (quick)
 - `configs/service/config.json` contains all keys used by the bot. Look at `partnerConfig.notion.keymappings` and `partnerConfig.notion.keyTypes` to adapt the mapping between Notion and bot data models.
 
