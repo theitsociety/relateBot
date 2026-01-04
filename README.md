@@ -76,8 +76,12 @@ Update config file to point correct npm path
 - Generate OAuth credentials and a refresh token if you want to use the email templates or send messages via Gmail API. Use the helper `poc/gmail/generateTokenWithOneTimeUseGoogleCode.js` to obtain a refresh token interactively and store it in `partnerConfig.google.credentials.tokens.refresh_token`.
 
 #### Generate Google refresh token (quick steps)
-1. Ensure your `configs/service/config.json` has `partnerConfig.google.credentials.client_id`, `client_secret` and a redirect URI (e.g. `http://localhost`).
-2. Install dependencies (from repository root):
+1. Complete Google Cloud set-up
+- Create a new project at https://console.cloud.google.com/. 
+- Under the same project, client_id and client_secret can be created at Google Cloud --> API & Services --> Credentials -> Create Credentials -> OAuth client ID (Application Type: Desktop). 
+- After creating credentials enable Gmail API at Google Cloud --> API & Services --> Enable APIs & Services -> GMail API
+2. Ensure your `configs/service/config_prod.json` has `partnerConfig.google.credentials.client_id`, `client_secret` and a redirect URI (e.g. `http://localhost`). 
+3. Install dependencies (from repository root):
 
 ```bash
 npm install

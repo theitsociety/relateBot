@@ -1,7 +1,7 @@
 // auth.js
 
 const { google } = require('googleapis');
-const config = require('../../configs/service/config.json');
+const config = require('../../configs/service/config_prod.json');
 const { client_secret, client_id, redirect_uris } = config.partnerConfig.google.credentials;
 
 const readline = require('readline/promises');
