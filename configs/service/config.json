@@ -170,7 +170,8 @@
         ],
         "relationKeys": [
           "Assigned Community Builder",
-          "Mentor"
+          "Mentor",
+          "Mentee"
         ],
         "emailKeys": [
           "Email Address"
